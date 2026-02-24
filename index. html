@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>🪜 سُلَّم Math</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#141e30,#243b55);
+    color:white;
+    text-align:center;
+}
+.container{padding:30px;}
+input{
+    padding:10px;
+    font-size:18px;
+    width:200px;
+    border-radius:8px;
+    border:none;
+}
+button{
+    padding:10px 20px;
+    font-size:18px;
+    border-radius:8px;
+    border:none;
+    background:#ff9800;
+    cursor:pointer;
+    margin:10px;
+}
+button:hover{background:#e68900;}
+.hidden{display:none;}
+.circle{
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    background:gray;
+    display:inline-block;
+    margin:2px;
+}
+.done{background:limegreen;}
+.quiz-option{display:block;margin:6px;}
+#circles{margin-top:20px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🪜 سُلَّم Math</h1>
+
+<div id="home">
+<p>أدخل رقم من 1 إلى 100</p>
+<input type="number" id="levelInput" min="1" max="100">
+<br>
+<button onclick="startLevel()">ابدأ</button>
+</div>
+
+<div id="lessonPage" class="hidden">
+<h2 id="lessonTitle"></h2>
+<p id="lessonText"></p>
+
+<div id="quiz"></div>
+
+<button onclick="checkAnswer()">تحقق</button>
+<button onclick="goHome()">رجوع</button>
+</div>
+
+<div id="circles"></div>
+
+</div>
+
+<script>
+
+let currentLevel = 0;
+let correctAnswer = 0;
+
+function startLevel(){
+    const level = Number(document.getElementById("levelInput").value);
+
+    if(level < 1 || level > 100){
+        alert("أدخل رقم بين 1 و100");
+        return;
+    }
+
+    currentLevel = level;
+
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("lessonPage").classList.remove("hidden");
+
+    loadLesson(level);
+}
+
+function loadLesson(level){
+
+    document.getElementById("lessonTitle").innerText =
+    "المرحلة " + level;
+
+    let question = "";
+    let options = [];
+
+    /* 🟢 سهل */
+    if(level <= 20){
+        let a = level;
+        let b = 5;
+        correctAnswer = a + b;
+        question = `احسب: ${a} + ${b}`;
+        options = [correctAnswer, correctAnswer+1, correctAnswer-1, correctAnswer+2];
+        document.getElementById("lessonText").innerText = "جمع أعداد صحيحة";
+    }
+
+    /* 🟡 متوسط */
+    else if(level <= 40){
+        let a = level;
+        let b = 3;
+        correctAnswer = a * b;
+        question = `احسب: ${a} × ${b}`;
+        options = [correctAnswer, correctAnswer+3, correctAnswer-3, correctAnswer+6];
+        document.getElementById("lessonText").innerText = "الضرب";
+    }
+
+    /* 🟠 معادلات */
+    else if(level <= 60){
+        let x = (level % 5)+1;
+        let result = 3*x + 2;
+        correctAnswer = x;
+        question = `حل المعادلة: 3x + 2 = ${result}`;
+        options = [x, x+1, x+2, x-1];
+        document.getElementById("lessonText").innerText = "معادلات خطية";
+    }
+
+    /* 🔵 تحليل */
+    else if(level <= 80){
+        let x = (level % 4)+2;
+        correctAnswer = x;
+        question = `حل: x² = ${x*x}`;
+        options = [x, x+1, x+2, x-1];
+        document.getElementById("lessonText").innerText = "تحليل وتربيع";
+    }
+
+    /* 🔴 صعب جدًا */
+    else{
+        let a = (level % 6)+3;
+        let b = 4;
+        correctAnswer = Math.sqrt(a*a + b*b);
+        question = `مثلث قائم: ضلعين ${a} و ${b}. احسب الوتر`;
+        options = [correctAnswer, correctAnswer+1, correctAnswer-1, correctAnswer+2];
+        document.getElementById("lessonText").innerText = "نظرية فيثاغورس";
+    }
+
+    const quizDiv = document.getElementById("quiz");
+    quizDiv.innerHTML = `<p>${question}</p>`;
+
+    options.forEach(opt=>{
+        quizDiv.innerHTML += `
+        <label class="quiz-option">
+            <input type="radio" name="answer" value="${opt}">
+            ${opt}
+        </label>`;
+    });
+}
+
+function checkAnswer(){
+
+    const selected =
+    document.querySelector('input[name="answer"]:checked');
+
+    if(!selected){
+        alert("اختر إجابة");
+        return;
+    }
+
+    if(Number(selected.value) == correctAnswer){
+        alert("✅ صحيح!");
+        localStorage.setItem("level_"+currentLevel,"done");
+        updateCircles();
+    }else{
+        alert("❌ خطأ، حاول مرة أخرى");
+    }
+}
+
+function goHome(){
+    document.getElementById("lessonPage").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+}
+
+function updateCircles(){
+
+    const container = document.getElementById("circles");
+    container.innerHTML = "";
+
+    let completed = 0;
+
+    for(let i=1;i<=100;i++){
+        const circle = document.createElement("div");
+        circle.classList.add("circle");
+
+        if(localStorage.getItem("level_"+i)){
+            circle.classList.add("done");
+            completed++;
+        }
+
+        container.appendChild(circle);
+    }
+
+    if(completed === 100){
+        alert("🎉 أكمل في دورتك القادمة");
+    }
+}
+
+updateCircles();
+
+</script>
+
+</body>
+</html>
