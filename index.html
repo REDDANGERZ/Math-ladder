@@ -3,55 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🪜Math & Ladder</title>
+<title>🪜 سُلَّم Math</title>
 
 <style>
+:root{
+--bg: linear-gradient(135deg,#141E30,#243B55);
+--card: rgba(255,255,255,0.1);
+--text: #ffffff;
+--button: linear-gradient(45deg,#ff9800,#ff5722);
+--shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.dark{
+--bg: #0f0f0f;
+--card: #1c1c1c;
+--text: #eee;
+--button: linear-gradient(45deg,#333,#555);
+}
+
 body{
 margin:0;
 font-family:'Segoe UI', Tahoma, sans-serif;
-background:linear-gradient(135deg,#1e3c72,#2a5298);
-color:white;
+background:var(--bg);
+color:var(--text);
 text-align:center;
+transition:0.4s;
 }
 
 .container{
 padding:25px;
-max-width:500px;
+max-width:450px;
 margin:auto;
 }
 
-input,button{
+h1{
+font-size:24px;
+margin-bottom:15px;
+}
+
+input{
 width:100%;
 padding:14px;
 font-size:18px;
-border-radius:12px;
+border-radius:14px;
 border:none;
-margin-top:10px;
+margin-bottom:12px;
+box-shadow:var(--shadow);
 }
 
 button{
-background:linear-gradient(45deg,#ff9800,#ff5722);
+width:100%;
+padding:14px;
+font-size:18px;
+border-radius:14px;
+border:none;
+background:var(--button);
 color:white;
+margin-top:10px;
 cursor:pointer;
+transition:0.3s;
+box-shadow:var(--shadow);
+}
+
+button:hover{
+transform:translateY(-3px);
+opacity:0.9;
 }
 
 .quiz-option{
 display:block;
-background:rgba(255,255,255,0.15);
-padding:12px;
-margin:8px 0;
-border-radius:10px;
+background:var(--card);
+padding:14px;
+margin:10px 0;
+border-radius:14px;
 cursor:pointer;
 }
 
 .hidden{display:none;}
+
+.toggle{
+background:none;
+border:2px solid var(--text);
+color:var(--text);
+padding:8px;
+margin-bottom:12px;
+border-radius:10px;
+font-size:14px;
+cursor:pointer;
+}
+
+.toggle:hover{
+background:var(--text);
+color:black;
+}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-<h1>🪜 Math & Ladder </h1>
+<button class="toggle" onclick="toggleDark()">🌙 تبديل الوضع</button>
+
+<h1>🪜 سُلَّم Math</h1>
 
 <div id="home">
 <p>أدخل رقم من 1 إلى 100</p>
@@ -61,6 +114,7 @@ cursor:pointer;
 
 <div id="lessonPage" class="hidden">
 <h2 id="lessonTitle"></h2>
+<p id="lessonText"></p>
 <div id="quiz"></div>
 <button onclick="checkAnswer()">تحقق</button>
 </div>
@@ -69,14 +123,22 @@ cursor:pointer;
 
 <script>
 
+let currentLevel=0;
 let correctAnswer=0;
 
+/* 🌙 وضع ليلي */
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
+
+/* 🎯 المراحل */
 function startLevel(){
 let level=Number(document.getElementById("levelInput").value);
 if(level<1||level>100){
 alert("أدخل رقم بين 1 و100");
 return;
 }
+currentLevel=level;
 document.getElementById("home").classList.add("hidden");
 document.getElementById("lessonPage").classList.remove("hidden");
 loadLesson(level);
@@ -86,58 +148,139 @@ function loadLesson(level){
 
 document.getElementById("lessonTitle").innerText="المرحلة "+level;
 
-let question="";
-let options=[];
+const questions = [
 
-/* 1–20 تبسيط */
-if(level<=20){
-let a=level+2;
-let b=level%5+1;
-correctAnswer=(a+b);
-question=`بسط: ${a}x + ${b}x = ؟`;
-options=[`${correctAnswer}x`,`${correctAnswer+1}x`,`${correctAnswer-1}x`,`${a*b}x`];
-}
+/* ========= 1 - 10 (جمع وطرح) ========= */
+{q:"15 + 7 =", options:[22,20,21,23], answer:22},
+{q:"40 - 18 =", options:[22,21,20,19], answer:22},
+{q:"35 + 16 =", options:[51,50,52,49], answer:51},
+{q:"90 - 45 =", options:[45,40,35,50], answer:45},
+{q:"120 + 30 =", options:[150,140,130,160], answer:150},
+{q:"85 - 27 =", options:[58,57,59,60], answer:58},
+{q:"14 + 29 =", options:[43,44,42,45], answer:43},
+{q:"63 - 19 =", options:[44,45,43,42], answer:44},
+{q:"200 + 150 =", options:[350,300,400,250], answer:350},
+{q:"75 - 36 =", options:[39,38,40,41], answer:39},
 
-/* 21–40 معادلات خطية */
-else if(level<=40){
-let x=level%7+2;
-let result=3*x+5;
-correctAnswer=x;
-question=`حل: 3x + 5 = ${result}`;
-options=[x,x+1,x-1,x+2];
-}
+/* ========= 11 - 20 (ضرب وقسمة) ========= */
+{q:"8 × 7 =", options:[56,54,58,49], answer:56},
+{q:"81 ÷ 9 =", options:[9,8,7,6], answer:9},
+{q:"12 × 6 =", options:[72,70,74,68], answer:72},
+{q:"144 ÷ 12 =", options:[12,10,14,16], answer:12},
+{q:"15 × 4 =", options:[60,55,65,50], answer:60},
+{q:"96 ÷ 8 =", options:[12,14,10,16], answer:12},
+{q:"9 × 9 =", options:[81,72,90,99], answer:81},
+{q:"100 ÷ 5 =", options:[20,25,15,30], answer:20},
+{q:"11 × 11 =", options:[121,111,131,101], answer:121},
+{q:"64 ÷ 4 =", options:[16,14,18,12], answer:16},
 
-/* 41–60 توزيع */
-else if(level<=60){
-let a=level%6+2;
-let b=level%4+1;
-correctAnswer=2*a+2*b;
-question=`بسط: 2(${a} + ${b}) = ؟`;
-options=[correctAnswer,correctAnswer+2,correctAnswer-2,a+b];
-}
+/* ========= 21 - 40 (معادلات بسيطة) ========= */
+{q:"x + 5 = 12", options:[7,6,5,8], answer:7},
+{q:"x - 3 = 10", options:[13,12,14,11], answer:13},
+{q:"2x = 14", options:[7,6,8,9], answer:7},
+{q:"3x = 21", options:[7,6,5,8], answer:7},
+{q:"x ÷ 4 = 5", options:[20,25,15,10], answer:20},
+{q:"x + 9 = 20", options:[11,10,9,12], answer:11},
+{q:"x - 7 = 15", options:[22,20,21,23], answer:22},
+{q:"5x = 25", options:[5,4,6,7], answer:5},
+{q:"x ÷ 3 = 9", options:[27,18,21,24], answer:27},
+{q:"4x = 32", options:[8,6,10,12], answer:8},
+{q:"x + 15 = 30", options:[15,10,20,5], answer:15},
+{q:"x - 12 = 8", options:[20,18,16,22], answer:20},
+{q:"6x = 42", options:[7,6,8,9], answer:7},
+{q:"x ÷ 5 = 6", options:[30,25,35,40], answer:30},
+{q:"x + 18 = 40", options:[22,20,18,24], answer:22},
+{q:"x - 25 = 5", options:[30,25,35,40], answer:30},
+{q:"7x = 49", options:[7,6,8,9], answer:7},
+{q:"x ÷ 8 = 4", options:[32,24,16,40], answer:32},
+{q:"x + 4 = 19", options:[15,14,13,16], answer:15},
+{q:"x - 9 = 11", options:[20,18,22,21], answer:20},
 
-/* 61–80 قوى */
-else if(level<=80){
-let base=level%5+2;
-correctAnswer=base*base;
-question=`احسب: ${base}² = ؟`;
-options=[correctAnswer,base*3,base+base,correctAnswer+base];
-}
+/* ========= 41 - 60 (أسس وقوى) ========= */
+{q:"2² =", options:[4,6,8,2], answer:4},
+{q:"3² =", options:[9,6,12,8], answer:9},
+{q:"4² =", options:[16,12,14,18], answer:16},
+{q:"5² =", options:[25,20,15,30], answer:25},
+{q:"10² =", options:[100,20,50,200], answer:100},
+{q:"2³ =", options:[8,6,4,10], answer:8},
+{q:"3³ =", options:[27,9,18,21], answer:27},
+{q:"4³ =", options:[64,16,32,48], answer:64},
+{q:"5³ =", options:[125,25,75,100], answer:125},
+{q:"1² =", options:[1,2,0,3], answer:1},
+{q:"6² =", options:[36,30,32,40], answer:36},
+{q:"7² =", options:[49,42,56,45], answer:49},
+{q:"8² =", options:[64,60,70,72], answer:64},
+{q:"9² =", options:[81,72,90,99], answer:81},
+{q:"2⁴ =", options:[16,8,12,14], answer:16},
+{q:"3⁴ =", options:[81,27,64,9], answer:81},
+{q:"4⁴ =", options:[256,64,128,512], answer:256},
+{q:"5⁴ =", options:[625,125,500,725], answer:625},
+{q:"10³ =", options:[1000,100,10000,500], answer:1000},
+{q:"9³ =", options:[729,81,512,900], answer:729},
 
-/* 81–100 مسائل كلامية */
-else{
-let x=level%6+3;
-let total=4*x;
-correctAnswer=x;
-question=`عدد إذا ضربناه في 4 يصبح ${total}. ما العدد؟`;
-options=[x,x+1,x-1,x+2];
-}
+/* ========= 61 - 80 (مساحات) ========= */
+{q:"مساحة مربع ضلعه 5", options:[25,20,30,15], answer:25},
+{q:"مساحة مربع ضلعه 8", options:[64,60,70,72], answer:64},
+{q:"مساحة مستطيل 6×4", options:[24,20,18,30], answer:24},
+{q:"مساحة مستطيل 10×5", options:[50,40,60,55], answer:50},
+{q:"مساحة مثلث قاعدته10 وارتفاعه6", options:[30,60,40,25], answer:30},
+{q:"مساحة مربع ضلعه 12", options:[144,120,132,150], answer:144},
+{q:"مساحة مستطيل 7×3", options:[21,24,20,18], answer:21},
+{q:"مساحة مربع ضلعه 9", options:[81,72,90,99], answer:81},
+{q:"مساحة مستطيل 8×2", options:[16,14,18,12], answer:16},
+{q:"مساحة مثلث 8×4÷2", options:[16,32,20,18], answer:16},
+{q:"مساحة مربع ضلعه 15", options:[225,200,250,210], answer:225},
+{q:"مساحة مستطيل 12×3", options:[36,30,40,24], answer:36},
+{q:"مساحة مربع ضلعه 20", options:[400,200,300,500], answer:400},
+{q:"مساحة مستطيل 9×6", options:[54,60,48,45], answer:54},
+{q:"مساحة مثلث 12×5÷2", options:[30,60,40,25], answer:30},
+{q:"مساحة مربع ضلعه 4", options:[16,14,18,12], answer:16},
+{q:"مساحة مستطيل 14×2", options:[28,24,30,32], answer:28},
+{q:"مساحة مربع ضلعه 25", options:[625,600,650,700], answer:625},
+{q:"مساحة مستطيل 11×4", options:[44,40,48,36], answer:44},
+{q:"مساحة مثلث 6×10÷2", options:[30,60,40,25], answer:30},
 
-options.sort(()=>Math.random()-0.5);
+/* ========= 81 - 100 (حجم + صعوبة أعلى) ========= */
+{q:"حجم مكعب ضلعه 3", options:[27,9,18,24], answer:27},
+{q:"حجم مكعب ضلعه 4", options:[64,16,48,32], answer:64},
+{q:"حجم متوازي مستطيلات 5×4×3", options:[60,50,40,70], answer:60},
+{q:"حجم مكعب ضلعه 5", options:[125,25,100,150], answer:125},
+{q:"2x+5=15", options:[5,4,6,3], answer:5},
+{q:"3x-2=13", options:[5,4,6,7], answer:5},
+{q:"5x+5=30", options:[5,6,4,3], answer:5},
+{q:"4x+4=20", options:[4,5,6,3], answer:4},
+{q:"7x=63", options:[9,8,7,6], answer:9},
+{q:"x²=49", options:[7,6,8,9], answer:7},
+{q:"x²=64", options:[8,6,7,9], answer:8},
+{q:"x²=81", options:[9,8,7,6], answer:9},
+{q:"3x+6=21", options:[5,4,6,7], answer:5},
+{q:"4x-8=8", options:[4,3,5,6], answer:4},
+{q:"6x+6=42", options:[6,5,7,8], answer:6},
+{q:"2x²=32", options:[4,8,6,2], answer:4},
+{q:"x³=27", options:[3,9,6,2], answer:3},
+{q:"5x-5=20", options:[5,4,6,3], answer:5},
+{q:"8x=72", options:[9,8,7,6], answer:9},
+{q:"x²=100", options:[10,8,12,9], answer:10}
+
+];
+
+const qObj = questions[level-1];
+correctAnswer = qObj.answer;
+
+const quiz=document.getElementById("quiz");
+quiz.innerHTML=`<p>${qObj.q}</p>`;
+
+qObj.options.forEach(opt=>{
+quiz.innerHTML+=`
+<label class="quiz-option">
+<input type="radio" name="answer" value="${opt}">
+${opt}
+</label>`;
+});
+  }
 
 const quiz=document.getElementById("quiz");
 quiz.innerHTML=`<p>${question}</p>`;
-
 options.forEach(opt=>{
 quiz.innerHTML+=`
 <label class="quiz-option">
@@ -154,12 +297,13 @@ alert("اختر إجابة");
 return;
 }
 
-if(selected.value==correctAnswer){
+if(Number(selected.value)==correctAnswer){
 alert("✅ صحيح!");
 }else{
-alert("❌ حاول مرة أخرى");
+alert("❌ خطأ");
 }
 
+/* يرجع للصفحة الرئيسية */
 document.getElementById("lessonPage").classList.add("hidden");
 document.getElementById("home").classList.remove("hidden");
 document.getElementById("levelInput").value="";
