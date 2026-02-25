@@ -123,7 +123,81 @@ color:black;
 </div>
 
 <script>
+const questions = [
 
+/* ========= المرحلة 1-10 (معادلات خطية - سهل) ========= */
+{q:"x + 4 = 9", options:[5,6,4,3], answer:5},
+{q:"x - 7 = 3", options:[10,9,8,6], answer:10},
+{q:"2x = 12", options:[6,5,4,8], answer:6},
+{q:"3x = 15", options:[5,6,4,3], answer:5},
+{q:"x ÷ 5 = 4", options:[20,15,25,10], answer:20},
+{q:"4x + 2 = 10", options:[2,3,4,1], answer:2},
+{q:"5x - 5 = 20", options:[5,4,6,3], answer:5},
+{q:"2x + 6 = 14", options:[4,3,5,6], answer:4},
+{q:"7x = 49", options:[7,6,8,9], answer:7},
+{q:"3x - 3 = 9", options:[4,3,5,6], answer:4},
+
+/* ========= المرحلة 11-20 (متباينات) ========= */
+{q:"x + 3 > 7", options:["x>4","x<4","x=4","x≥4"], answer:"x>4"},
+{q:"x - 5 < 2", options:["x<7","x>7","x=7","x≥7"], answer:"x<7"},
+{q:"2x > 10", options:["x>5","x<5","x=5","x≥5"], answer:"x>5"},
+{q:"3x < 12", options:["x<4","x>4","x=4","x≥4"], answer:"x<4"},
+{q:"x/4 ≥ 3", options:["x≥12","x≤12","x=12","x>12"], answer:"x≥12"},
+{q:"5x ≤ 20", options:["x≤4","x≥4","x=4","x<4"], answer:"x≤4"},
+{q:"x+8 ≤ 10", options:["x≤2","x≥2","x=2","x<2"], answer:"x≤2"},
+{q:"2x-4 > 0", options:["x>2","x<2","x=2","x≥2"], answer:"x>2"},
+{q:"x-6 ≥ 3", options:["x≥9","x≤9","x=9","x>9"], answer:"x≥9"},
+{q:"4x < 16", options:["x<4","x>4","x=4","x≥4"], answer:"x<4"},
+
+/* ========= المرحلة 21-30 (فيثاغورس) ========= */
+{q:"مثلث قائم ضلعاه 3 و4، الوتر؟", options:[5,6,7,4], answer:5},
+{q:"مثلث قائم ضلعاه 5 و12، الوتر؟", options:[13,14,15,12], answer:13},
+{q:"وتر 10 وأحد الضلعين 6، الضلع الآخر؟", options:[8,7,6,9], answer:8},
+{q:"مثلث قائم ضلعاه 8 و15، الوتر؟", options:[17,16,18,20], answer:17},
+{q:"وتر 25 وأحد الضلعين 7، الضلع الآخر؟", options:[24,20,18,22], answer:24},
+{q:"6² + 8² =", options:[100,90,80,70], answer:100},
+{q:"5² + 12² =", options:[169,144,150,130], answer:169},
+{q:"9² + 12² =", options:[225,200,180,250], answer:225},
+{q:"8² + 15² =", options:[289,300,250,275], answer:289},
+{q:"12² + 5² =", options:[169,150,180,144], answer:169},
+
+/* ========= المرحلة 31-40 (الجذور) ========= */
+{q:"√25 =", options:[5,4,6,3], answer:5},
+{q:"√49 =", options:[7,6,8,9], answer:7},
+{q:"√81 =", options:[9,8,7,6], answer:9},
+{q:"√144 =", options:[12,10,14,16], answer:12},
+{q:"√169 =", options:[13,12,14,15], answer:13},
+{q:"√196 =", options:[14,12,16,18], answer:14},
+{q:"√225 =", options:[15,14,16,18], answer:15},
+{q:"√256 =", options:[16,18,14,20], answer:16},
+{q:"√400 =", options:[20,25,30,15], answer:20},
+{q:"√324 =", options:[18,16,20,22], answer:18},
+
+/* ========= المرحلة 41-50 (الأسس) ========= */
+{q:"2³ × 2² =", options:[32,16,8,64], answer:32},
+{q:"5⁴ ÷ 5² =", options:[25,5,125,10], answer:25},
+{q:"3² × 3³ =", options:[243,27,81,9], answer:243},
+{q:"10³ ÷ 10¹ =", options:[100,1000,10,1], answer:100},
+{q:"4² × 4¹ =", options:[64,16,32,8], answer:64},
+{q:"2⁵ ÷ 2³ =", options:[4,8,16,2], answer:4},
+{q:"7² × 7¹ =", options:[343,49,98,21], answer:343},
+{q:"6³ ÷ 6² =", options:[6,36,12,18], answer:6},
+{q:"9² ÷ 9¹ =", options:[9,18,27,81], answer:9},
+{q:"8³ ÷ 8² =", options:[8,16,32,64], answer:8},
+
+/* ========= المرحلة 51-60 (التحليل) ========= */
+{q:"x² + 5x =", options:["x(x+5)","(x+5)²","x²(5)","(x+5)(x-5)"], answer:"x(x+5)"},
+{q:"x² - 9 =", options:["(x-3)(x+3)","(x-9)(x+1)","x(x-9)","(x-3)²"], answer:"(x-3)(x+3)"},
+{q:"x² + 7x + 10 =", options:["(x+5)(x+2)","(x+10)(x-1)","(x+7)(x+3)","x(x+10)"], answer:"(x+5)(x+2)"},
+{q:"x² - 4 =", options:["(x-2)(x+2)","(x-4)(x+1)","x(x-4)","(x-2)²"], answer:"(x-2)(x+2)"},
+{q:"x² + 6x + 9 =", options:["(x+3)²","(x+9)(x-1)","x(x+9)","(x+6)²"], answer:"(x+3)²"},
+{q:"x² - 16 =", options:["(x-4)(x+4)","(x-8)(x+2)","x(x-16)","(x-4)²"], answer:"(x-4)(x+4)"},
+{q:"x² + 8x +16 =", options:["(x+4)²","(x+8)(x+2)","x(x+16)","(x+2)²"], answer:"(x+4)²"},
+{q:"x² - 25 =", options:["(x-5)(x+5)","(x-25)(x+1)","x(x-25)","(x-5)²"], answer:"(x-5)(x+5)"},
+{q:"x² + 9x + 20 =", options:["(x+4)(x+5)","(x+10)(x-1)","(x+9)(x+2)","x(x+20)"], answer:"(x+4)(x+5)"},
+{q:"x² - 36 =", options:["(x-6)(x+6)","(x-12)(x+3)","x(x-36)","(x-6)²"], answer:"(x-6)(x+6)"}
+
+];
 let currentLevel=0;
 let correctAnswer=0;
 let timer;
@@ -148,90 +222,6 @@ document.getElementById("lessonPage").classList.add("hidden");
 document.getElementById("home").classList.remove("hidden");
 document.getElementById("levelInput").value="";
 }
-/* ========= 1 - 10 (المعادلات الخطية - سهل) ========= */
-{q:"x + 4 = 9", options:[5,6,4,3], answer:5},
-{q:"x - 7 = 3", options:[10,9,8,6], answer:10},
-{q:"2x = 12", options:[6,5,4,8], answer:6},
-{q:"3x = 15", options:[5,6,4,3], answer:5},
-{q:"x ÷ 5 = 4", options:[20,15,25,10], answer:20},
-{q:"4x + 2 = 10", options:[2,3,4,1], answer:2},
-{q:"5x - 5 = 20", options:[5,4,6,3], answer:5},
-{q:"2x + 6 = 14", options:[4,3,5,6], answer:4},
-{q:"7x = 49", options:[7,6,8,9], answer:7},
-{q:"3x - 3 = 9", options:[4,3,5,6], answer:4},
-
-/* ========= 11 - 20 (المتباينات - متوسط) ========= */
-{q:"x + 3 > 7", options:["x>4","x<4","x=4","x≥4"], answer:"x>4"},
-{q:"x - 5 < 2", options:["x<7","x>7","x=7","x≥7"], answer:"x<7"},
-{q:"2x > 10", options:["x>5","x<5","x=5","x≥5"], answer:"x>5"},
-{q:"3x < 12", options:["x<4","x>4","x=4","x≥4"], answer:"x<4"},
-{q:"x/4 ≥ 3", options:["x≥12","x≤12","x=12","x>12"], answer:"x≥12"},
-{q:"5x ≤ 20", options:["x≤4","x≥4","x=4","x<4"], answer:"x≤4"},
-{q:"x+8 ≤ 10", options:["x≤2","x≥2","x=2","x<2"], answer:"x≤2"},
-{q:"2x-4 > 0", options:["x>2","x<2","x=2","x≥2"], answer:"x>2"},
-{q:"x-6 ≥ 3", options:["x≥9","x≤9","x=9","x>9"], answer:"x≥9"},
-{q:"4x < 16", options:["x<4","x>4","x=4","x≥4"], answer:"x<4"},
-
-/* ========= 21 - 30 (نظرية فيثاغورس) ========= */
-{q:"مثلث قائم ضلعاه 3 و4، الوتر؟", options:[5,6,7,4], answer:5},
-{q:"مثلث قائم ضلعاه 5 و12، الوتر؟", options:[13,14,15,12], answer:13},
-{q:"وتر مثلث 10 وأحد الضلعين 6، الضلع الآخر؟", options:[8,7,6,9], answer:8},
-{q:"مثلث قائم ضلعاه 8 و15، الوتر؟", options:[17,16,18,20], answer:17},
-{q:"وتر 25 وأحد الضلعين 7، الضلع الآخر؟", options:[24,20,18,22], answer:24},
-{q:"3² + 4² =", options:[25,12,7,5], answer:25},
-{q:"6² + 8² =", options:[100,90,80,70], answer:100},
-{q:"5² + 12² =", options:[169,144,150,130], answer:169},
-{q:"9² + 12² =", options:[225,200,180,250], answer:225},
-{q:"8² + 15² =", options:[289,300,250,275], answer:289},
-
-/* ========= 31 - 40 (الجذور) ========= */
-{q:"√25 =", options:[5,4,6,3], answer:5},
-{q:"√49 =", options:[7,6,8,9], answer:7},
-{q:"√81 =", options:[9,8,7,6], answer:9},
-{q:"√144 =", options:[12,10,14,16], answer:12},
-{q:"√169 =", options:[13,12,14,15], answer:13},
-{q:"√196 =", options:[14,12,16,18], answer:14},
-{q:"√225 =", options:[15,14,16,18], answer:15},
-{q:"√256 =", options:[16,18,14,20], answer:16},
-{q:"√400 =", options:[20,25,30,15], answer:20},
-{q:"√324 =", options:[18,16,20,22], answer:18},
-
-/* ========= 41 - 50 (الأسس النسبية) ========= */
-{q:"2³ × 2² =", options:[32,16,8,64], answer:32},
-{q:"5⁴ ÷ 5² =", options:[25,5,125,10], answer:25},
-{q:"3² × 3³ =", options:[243,27,81,9], answer:243},
-{q:"10³ ÷ 10¹ =", options:[100,1000,10,1], answer:100},
-{q:"4² × 4¹ =", options:[64,16,32,8], answer:64},
-{q:"2⁵ ÷ 2³ =", options:[4,8,16,2], answer:4},
-{q:"7² × 7¹ =", options:[343,49,98,21], answer:343},
-{q:"6³ ÷ 6² =", options:[6,36,12,18], answer:6},
-{q:"9² ÷ 9¹ =", options:[9,18,27,81], answer:9},
-{q:"8³ ÷ 8² =", options:[8,16,32,64], answer:8},
-
-/* ========= 51 - 60 (التحليل) ========= */
-{q:"x² + 5x =", options:["x(x+5)","(x+5)²","x²(5)","(x+5)(x-5)"], answer:"x(x+5)"},
-{q:"x² - 9 =", options:["(x-3)(x+3)","(x-9)(x+1)","x(x-9)","(x-3)²"], answer:"(x-3)(x+3)"},
-{q:"x² + 7x + 10 =", options:["(x+5)(x+2)","(x+10)(x-1)","(x+7)(x+3)","x(x+10)"], answer:"(x+5)(x+2)"},
-{q:"x² - 4 =", options:["(x-2)(x+2)","(x-4)(x+1)","x(x-4)","(x-2)²"], answer:"(x-2)(x+2)"},
-{q:"x² + 6x + 9 =", options:["(x+3)²","(x+9)(x-1)","x(x+9)","(x+6)²"], answer:"(x+3)²"},
-{q:"x² - 16 =", options:["(x-4)(x+4)","(x-8)(x+2)","x(x-16)","(x-4)²"], answer:"(x-4)(x+4)"},
-{q:"x² + 8x +16 =", options:["(x+4)²","(x+8)(x+2)","x(x+16)","(x+2)²"], answer:"(x+4)²"},
-{q:"x² - 25 =", options:["(x-5)(x+5)","(x-25)(x+1)","x(x-25)","(x-5)²"], answer:"(x-5)(x+5)"},
-{q:"x² + 9x + 20 =", options:["(x+4)(x+5)","(x+10)(x-1)","(x+9)(x+2)","x(x+20)"], answer:"(x+4)(x+5)"},
-{q:"x² - 36 =", options:["(x-6)(x+6)","(x-12)(x+3)","x(x-36)","(x-6)²"], answer:"(x-6)(x+6)"},
-
-/* ========= 61 - 70 (نظام المعادلات - أصعب) ========= */
-{q:"x+y=10 , x=6 → y=?", options:[4,5,3,2], answer:4},
-{q:"x+y=15 , x=9 → y=?", options:[6,5,7,4], answer:6},
-{q:"x-y=4 , x=9 → y=?", options:[5,4,6,3], answer:5},
-{q:"2x+y=11 , x=5 → y=?", options:[1,2,3,4], answer:1},
-{q:"x+y=12 , y=7 → x=?", options:[5,6,4,3], answer:5},
-{q:"x+y=20 , x=12 → y=?", options:[8,7,6,9], answer:8},
-{q:"x-y=3 , y=4 → x=?", options:[7,6,5,8], answer:7},
-{q:"3x+y=16 , x=5 → y=?", options:[1,2,3,4], answer:1},
-{q:"x+y=18 , x=10 → y=?", options:[8,7,6,9], answer:8},
-{q:"2x+y=14 , x=6 → y=?", options:[2,3,4,5], answer:2},},1000);
-}
 
 /* 🎯 المراحل */
 function startLevel(){
@@ -251,12 +241,6 @@ function loadLesson(level){
 startTimer();
 
 document.getElementById("lessonTitle").innerText="المرحلة "+level;
-
-const questions = [
-
-/* ========= 1 - 10 (جمع وطرح) ========= */
-
-];
 
 const qObj = questions[level-1];
 correctAnswer = qObj.answer;
