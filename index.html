@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🪜 سُلَّم Math</title>
+<title>🪜 سُلَّم Math</title>
 
 <style>
 :root{
@@ -77,6 +77,7 @@ padding:14px;
 margin:10px 0;
 border-radius:14px;
 cursor:pointer;
+text-align: right;
 }
 
 .hidden{display:none;}
@@ -90,6 +91,7 @@ margin-bottom:12px;
 border-radius:10px;
 font-size:14px;
 cursor:pointer;
+width: auto;
 }
 
 .toggle:hover{
@@ -107,16 +109,15 @@ color:black;
 <h1>🪜سلم و رياضيات</h1>
 
 <div id="home">
-<p>أدخل رقم من 1 إلى 100</p>
-<input type="number" id="levelInput" min="1" max="100">
+<p>أدخل رقم من 1 إلى 60</p>
+<input type="number" id="levelInput" min="1" max="60">
 <button onclick="startLevel()">ابدأ</button>
 </div>
 
 <div id="lessonPage" class="hidden">
 <h2 id="lessonTitle"></h2>
-<p id="lessonText"></p>
-<p id="timerText">⏳ الوقت: 7</p>
 <div id="quiz"></div>
+<p id="timerText">⏳ الوقت: 7</p>
 <button onclick="checkAnswer()">تحقق</button>
 </div>
 
@@ -124,7 +125,6 @@ color:black;
 
 <script>
 const questions = [
-
 /* ========= المرحلة 1-10 (معادلات خطية - سهل) ========= */
 {q:"x + 4 = 9", options:[5,6,4,3], answer:5},
 {q:"x - 7 = 3", options:[10,9,8,6], answer:10},
@@ -196,87 +196,87 @@ const questions = [
 {q:"x² - 25 =", options:["(x-5)(x+5)","(x-25)(x+1)","x(x-25)","(x-5)²"], answer:"(x-5)(x+5)"},
 {q:"x² + 9x + 20 =", options:["(x+4)(x+5)","(x+10)(x-1)","(x+9)(x+2)","x(x+20)"], answer:"(x+4)(x+5)"},
 {q:"x² - 36 =", options:["(x-6)(x+6)","(x-12)(x+3)","x(x-36)","(x-6)²"], answer:"(x-6)(x+6)"}
-
 ];
+
 let currentLevel=0;
 let correctAnswer=0;
 let timer;
 let timeLeft = 7;
 
-/* 🌙 وضع ليلي */
 function toggleDark(){
-document.body.classList.toggle("dark");
+    document.body.classList.toggle("dark");
 }
+
 function startTimer(){
-timeLeft = 7;
-document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+    clearInterval(timer);
+    timeLeft = 7;
+    document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
 
-timer = setInterval(()=>{
-timeLeft--;
-document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+    timer = setInterval(()=>{
+        timeLeft--;
+        document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
 
-if(timeLeft <= 0){
-clearInterval(timer);
-alert("⛔ انتهى الوقت! خسرت");
-document.getElementById("lessonPage").classList.add("hidden");
-document.getElementById("home").classList.remove("hidden");
-document.getElementById("levelInput").value="";
+        if(timeLeft <= 0){
+            clearInterval(timer);
+            alert("⛔ انتهى الوقت! خسرت");
+            goBackHome();
+        }
+    }, 1000);
 }
 
-/* 🎯 المراحل */
 function startLevel(){
-let level=Number(document.getElementById("levelInput").value);
-if(level<1||level>100){
-alert("أدخل رقم بين 1 و100");
-return;
-}
-currentLevel=level;
-document.getElementById("home").classList.add("hidden");
-document.getElementById("lessonPage").classList.remove("hidden");
-loadLesson(level);
+    let level=Number(document.getElementById("levelInput").value);
+    if(level < 1 || level > questions.length){
+        alert("أدخل رقم بين 1 و " + questions.length);
+        return;
+    }
+    currentLevel=level;
+    document.getElementById("home").classList.add("hidden");
+    document.getElementById("lessonPage").classList.remove("hidden");
+    loadLesson(level);
 }
 
-/* 📚 100 سؤال الصف الثامن */
 function loadLesson(level){
-startTimer();
+    startTimer();
+    document.getElementById("lessonTitle").innerText="المرحلة "+level;
 
-document.getElementById("lessonTitle").innerText="المرحلة "+level;
+    const qObj = questions[level-1];
+    correctAnswer = qObj.answer;
 
-const qObj = questions[level-1];
-correctAnswer = qObj.answer;
+    const quiz=document.getElementById("quiz");
+    quiz.innerHTML=`<p style="font-size:20px; font-weight:bold;">${qObj.q}</p>`;
 
-const quiz=document.getElementById("quiz");
-quiz.innerHTML=`<p>${qObj.q}</p>`;
-
-qObj.options.forEach(opt=>{
-quiz.innerHTML+=`
-<label class="quiz-option">
-<input type="radio" name="answer" value="${opt}">
-${opt}
-</label>`;
-});
+    qObj.options.forEach(opt=>{
+        quiz.innerHTML+=`
+        <label class="quiz-option">
+            <input type="radio" name="answer" value="${opt}">
+            ${opt}
+        </label>`;
+    });
 }
 
 function checkAnswer(){
-clearInterval(timer);
-const selected=document.querySelector('input[name="answer"]:checked');
-if(!selected){
-alert("اختر إجابة");
-return;
+    const selected=document.querySelector('input[name="answer"]:checked');
+    if(!selected){
+        alert("اختر إجابة");
+        return;
+    }
+
+    clearInterval(timer);
+    // Use toString comparison to handle both numbers and strings (like x>4)
+    if(selected.value == correctAnswer.toString()){
+        alert("✅ صحيح!");
+    }else{
+        alert("❌ خطأ! الإجابة الصحيحة هي: " + correctAnswer);
+    }
+    goBackHome();
 }
 
-if(Number(selected.value)==correctAnswer){
-alert("✅ صحيح!");
-}else{
-alert("❌ خطأ");
+function goBackHome(){
+    document.getElementById("lessonPage").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+    document.getElementById("levelInput").value="";
 }
-
-/* يرجع للصفحة الرئيسية */
-document.getElementById("lessonPage").classList.add("hidden");
-document.getElementById("home").classList.remove("hidden");
-document.getElementById("levelInput").value="";
-}
-
 </script>
 
 </body>
