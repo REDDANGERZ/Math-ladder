@@ -11,7 +11,6 @@
 --card: rgba(255,255,255,0.1);
 --text: #ffffff;
 --button: linear-gradient(45deg,#ff9800,#ff5722);
---progress: linear-gradient(90deg,#00e676,#00c853);
 --shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
@@ -20,7 +19,6 @@
 --card: #1c1c1c;
 --text: #eee;
 --button: linear-gradient(45deg,#333,#555);
---progress: linear-gradient(90deg,#00c853,#009624);
 }
 
 body{
@@ -30,12 +28,6 @@ background:var(--bg);
 color:var(--text);
 text-align:center;
 transition:0.4s;
-animation:fadeIn 0.8s ease;
-}
-
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(10px);}
-to{opacity:1; transform:translateY(0);}
 }
 
 .container{
@@ -47,7 +39,6 @@ margin:auto;
 h1{
 font-size:24px;
 margin-bottom:15px;
-letter-spacing:1px;
 }
 
 input{
@@ -79,73 +70,16 @@ transform:translateY(-3px);
 opacity:0.9;
 }
 
-button:active{
-transform:scale(0.97);
-}
-
 .quiz-option{
 display:block;
 background:var(--card);
-backdrop-filter:blur(10px);
 padding:14px;
 margin:10px 0;
 border-radius:14px;
 cursor:pointer;
-transition:0.3s;
-border:2px solid transparent;
-}
-
-.quiz-option:hover{
-transform:scale(1.03);
-border-color:#ffffff55;
-}
-
-.quiz-option input{
-margin-left:8px;
 }
 
 .hidden{display:none;}
-
-.progress-bar{
-width:100%;
-background:#ffffff22;
-border-radius:25px;
-height:18px;
-margin-top:20px;
-overflow:hidden;
-box-shadow:var(--shadow);
-}
-
-.progress-fill{
-height:100%;
-background:var(--progress);
-width:0%;
-transition:0.5s;
-}
-
-#circles{
-display:grid;
-grid-template-columns:repeat(10,1fr);
-gap:6px;
-margin-top:20px;
-}
-
-.circle{
-width:100%;
-aspect-ratio:1/1;
-border-radius:50%;
-background:#666;
-transition:0.3s;
-}
-
-.circle:hover{
-transform:scale(1.2);
-}
-
-.done{
-background:linear-gradient(45deg,#00e676,#00c853);
-box-shadow:0 0 10px #00e676;
-}
 
 .toggle{
 background:none;
@@ -156,14 +90,12 @@ margin-bottom:12px;
 border-radius:10px;
 font-size:14px;
 cursor:pointer;
-transition:0.3s;
 }
 
 .toggle:hover{
 background:var(--text);
 color:black;
-    }
-
+}
 </style>
 </head>
 <body>
@@ -185,14 +117,7 @@ color:black;
 <p id="lessonText"></p>
 <div id="quiz"></div>
 <button onclick="checkAnswer()">تحقق</button>
-<button onclick="goHome()">رجوع</button>
 </div>
-
-<div class="progress-bar">
-<div class="progress-fill" id="progressFill"></div>
-</div>
-
-<div id="circles"></div>
 
 </div>
 
@@ -204,12 +129,6 @@ let correctAnswer=0;
 /* 🌙 وضع ليلي */
 function toggleDark(){
 document.body.classList.toggle("dark");
-localStorage.setItem("darkMode",
-document.body.classList.contains("dark"));
-}
-
-if(localStorage.getItem("darkMode")==="true"){
-document.body.classList.add("dark");
 }
 
 /* 🎯 المراحل */
@@ -264,44 +183,18 @@ if(!selected){
 alert("اختر إجابة");
 return;
 }
+
 if(Number(selected.value)==correctAnswer){
-localStorage.setItem("level_"+currentLevel,"done");
-updateCircles();
 alert("✅ صحيح!");
 }else{
-alert("❌ حاول مرة أخرى");
-}
+alert("❌ خطأ");
 }
 
-function goHome(){
+/* يرجع للصفحة الرئيسية */
 document.getElementById("lessonPage").classList.add("hidden");
 document.getElementById("home").classList.remove("hidden");
+document.getElementById("levelInput").value="";
 }
-
-function updateCircles(){
-const container=document.getElementById("circles");
-container.innerHTML="";
-let completed=0;
-
-for(let i=1;i<=100;i++){
-let c=document.createElement("div");
-c.classList.add("circle");
-if(localStorage.getItem("level_"+i)){
-c.classList.add("done");
-completed++;
-}
-container.appendChild(c);
-}
-
-let percent=(completed/100)*100;
-document.getElementById("progressFill").style.width=percent+"%";
-
-if(completed===100){
-alert("🎉 أكمل في دورتك القادمة");
-}
-}
-
-updateCircles();
 
 </script>
 
