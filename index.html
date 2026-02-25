@@ -115,6 +115,7 @@ color:black;
 <div id="lessonPage" class="hidden">
 <h2 id="lessonTitle"></h2>
 <p id="lessonText"></p>
+<p id="timerText">⏳ الوقت: 7</p>
 <div id="quiz"></div>
 <button onclick="checkAnswer()">تحقق</button>
 </div>
@@ -125,10 +126,29 @@ color:black;
 
 let currentLevel=0;
 let correctAnswer=0;
+let timer;
+let timeLeft = 7;
 
 /* 🌙 وضع ليلي */
 function toggleDark(){
 document.body.classList.toggle("dark");
+}
+function startTimer(){
+timeLeft = 7;
+document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+
+timer = setInterval(()=>{
+timeLeft--;
+document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+
+if(timeLeft <= 0){
+clearInterval(timer);
+alert("⛔ انتهى الوقت! خسرت");
+document.getElementById("lessonPage").classList.add("hidden");
+document.getElementById("home").classList.remove("hidden");
+document.getElementById("levelInput").value="";
+}
+},1000);
 }
 
 /* 🎯 المراحل */
@@ -146,6 +166,7 @@ loadLesson(level);
 
 /* 📚 100 سؤال الصف الثامن */
 function loadLesson(level){
+startTimer();
 
 document.getElementById("lessonTitle").innerText="المرحلة "+level;
 
@@ -281,6 +302,7 @@ ${opt}
 }
 
 function checkAnswer(){
+clearInterval(timer);
 const selected=document.querySelector('input[name="answer"]:checked');
 if(!selected){
 alert("اختر إجابة");
