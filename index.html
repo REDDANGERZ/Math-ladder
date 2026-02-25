@@ -3,108 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🪜 سُلَّم Math</title>
+<title>🪜Math & Ladder</title>
 
 <style>
-:root{
---bg: linear-gradient(135deg,#141E30,#243B55);
---card: rgba(255,255,255,0.1);
---text: #ffffff;
---button: linear-gradient(45deg,#ff9800,#ff5722);
---shadow: 0 8px 25px rgba(0,0,0,0.3);
-}
-
-.dark{
---bg: #0f0f0f;
---card: #1c1c1c;
---text: #eee;
---button: linear-gradient(45deg,#333,#555);
-}
-
 body{
 margin:0;
 font-family:'Segoe UI', Tahoma, sans-serif;
-background:var(--bg);
-color:var(--text);
+background:linear-gradient(135deg,#1e3c72,#2a5298);
+color:white;
 text-align:center;
-transition:0.4s;
 }
 
 .container{
 padding:25px;
-max-width:450px;
+max-width:500px;
 margin:auto;
 }
 
-h1{
-font-size:24px;
-margin-bottom:15px;
-}
-
-input{
+input,button{
 width:100%;
 padding:14px;
 font-size:18px;
-border-radius:14px;
+border-radius:12px;
 border:none;
-margin-bottom:12px;
-box-shadow:var(--shadow);
+margin-top:10px;
 }
 
 button{
-width:100%;
-padding:14px;
-font-size:18px;
-border-radius:14px;
-border:none;
-background:var(--button);
+background:linear-gradient(45deg,#ff9800,#ff5722);
 color:white;
-margin-top:10px;
 cursor:pointer;
-transition:0.3s;
-box-shadow:var(--shadow);
-}
-
-button:hover{
-transform:translateY(-3px);
-opacity:0.9;
 }
 
 .quiz-option{
 display:block;
-background:var(--card);
-padding:14px;
-margin:10px 0;
-border-radius:14px;
+background:rgba(255,255,255,0.15);
+padding:12px;
+margin:8px 0;
+border-radius:10px;
 cursor:pointer;
 }
 
 .hidden{display:none;}
-
-.toggle{
-background:none;
-border:2px solid var(--text);
-color:var(--text);
-padding:8px;
-margin-bottom:12px;
-border-radius:10px;
-font-size:14px;
-cursor:pointer;
-}
-
-.toggle:hover{
-background:var(--text);
-color:black;
-}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-<button class="toggle" onclick="toggleDark()">🌙 تبديل الوضع</button>
-
-<h1>🪜 سُلَّم Math</h1>
+<h1>🪜 Math & Ladder </h1>
 
 <div id="home">
 <p>أدخل رقم من 1 إلى 100</p>
@@ -114,7 +61,6 @@ color:black;
 
 <div id="lessonPage" class="hidden">
 <h2 id="lessonTitle"></h2>
-<p id="lessonText"></p>
 <div id="quiz"></div>
 <button onclick="checkAnswer()">تحقق</button>
 </div>
@@ -123,22 +69,14 @@ color:black;
 
 <script>
 
-let currentLevel=0;
 let correctAnswer=0;
 
-/* 🌙 وضع ليلي */
-function toggleDark(){
-document.body.classList.toggle("dark");
-}
-
-/* 🎯 المراحل */
 function startLevel(){
 let level=Number(document.getElementById("levelInput").value);
 if(level<1||level>100){
 alert("أدخل رقم بين 1 و100");
 return;
 }
-currentLevel=level;
 document.getElementById("home").classList.add("hidden");
 document.getElementById("lessonPage").classList.remove("hidden");
 loadLesson(level);
@@ -151,23 +89,55 @@ document.getElementById("lessonTitle").innerText="المرحلة "+level;
 let question="";
 let options=[];
 
-if(level<=50){
-let a=level;
-correctAnswer=a+5;
-question=`احسب: ${a}+5`;
-options=[correctAnswer,correctAnswer+1,correctAnswer-1,correctAnswer+2];
-document.getElementById("lessonText").innerText="جمع";
-}else{
-let x=(level%5)+1;
-let result=3*x+2;
-correctAnswer=x;
-question=`حل: 3x+2=${result}`;
-options=[x,x+1,x+2,x-1];
-document.getElementById("lessonText").innerText="معادلات";
+/* 1–20 تبسيط */
+if(level<=20){
+let a=level+2;
+let b=level%5+1;
+correctAnswer=(a+b);
+question=`بسط: ${a}x + ${b}x = ؟`;
+options=[`${correctAnswer}x`,`${correctAnswer+1}x`,`${correctAnswer-1}x`,`${a*b}x`];
 }
+
+/* 21–40 معادلات خطية */
+else if(level<=40){
+let x=level%7+2;
+let result=3*x+5;
+correctAnswer=x;
+question=`حل: 3x + 5 = ${result}`;
+options=[x,x+1,x-1,x+2];
+}
+
+/* 41–60 توزيع */
+else if(level<=60){
+let a=level%6+2;
+let b=level%4+1;
+correctAnswer=2*a+2*b;
+question=`بسط: 2(${a} + ${b}) = ؟`;
+options=[correctAnswer,correctAnswer+2,correctAnswer-2,a+b];
+}
+
+/* 61–80 قوى */
+else if(level<=80){
+let base=level%5+2;
+correctAnswer=base*base;
+question=`احسب: ${base}² = ؟`;
+options=[correctAnswer,base*3,base+base,correctAnswer+base];
+}
+
+/* 81–100 مسائل كلامية */
+else{
+let x=level%6+3;
+let total=4*x;
+correctAnswer=x;
+question=`عدد إذا ضربناه في 4 يصبح ${total}. ما العدد؟`;
+options=[x,x+1,x-1,x+2];
+}
+
+options.sort(()=>Math.random()-0.5);
 
 const quiz=document.getElementById("quiz");
 quiz.innerHTML=`<p>${question}</p>`;
+
 options.forEach(opt=>{
 quiz.innerHTML+=`
 <label class="quiz-option">
@@ -184,13 +154,12 @@ alert("اختر إجابة");
 return;
 }
 
-if(Number(selected.value)==correctAnswer){
+if(selected.value==correctAnswer){
 alert("✅ صحيح!");
 }else{
-alert("❌ خطأ");
+alert("❌ حاول مرة أخرى");
 }
 
-/* يرجع للصفحة الرئيسية */
 document.getElementById("lessonPage").classList.add("hidden");
 document.getElementById("home").classList.remove("hidden");
 document.getElementById("levelInput").value="";
