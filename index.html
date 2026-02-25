@@ -144,6 +144,7 @@ document.getElementById("lessonPage").classList.remove("hidden");
 loadLesson(level);
 }
 
+/* 📚 100 سؤال الصف الثامن */
 function loadLesson(level){
 
 document.getElementById("lessonTitle").innerText="المرحلة "+level;
@@ -271,17 +272,6 @@ const quiz=document.getElementById("quiz");
 quiz.innerHTML=`<p>${qObj.q}</p>`;
 
 qObj.options.forEach(opt=>{
-quiz.innerHTML+=`
-<label class="quiz-option">
-<input type="radio" name="answer" value="${opt}">
-${opt}
-</label>`;
-});
-  }
-
-const quiz=document.getElementById("quiz");
-quiz.innerHTML=`<p>${question}</p>`;
-options.forEach(opt=>{
 quiz.innerHTML+=`
 <label class="quiz-option">
 <input type="radio" name="answer" value="${opt}">
