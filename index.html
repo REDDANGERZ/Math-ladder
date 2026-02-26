@@ -255,32 +255,7 @@ function toggleDark(){
     document.body.classList.toggle("dark");
 }
 
-function startTimer(){
 
-clearInterval(timer);
-
-timeLeft = 7;
-document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
-
-const sound = document.getElementById("tickSound");
-
-timer = setInterval(()=>{
-
-timeLeft--;
-document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
-
-/* 🔊 تشغيل الصوت كل ثانية */
-sound.currentTime = 0;
-sound.play();
-
-if(timeLeft <= 0){
-clearInterval(timer);
-alert("⛔ انتهى الوقت! خسرت");
-goHome();
-}
-
-},1000);
-}
 
 function startLevel(){
     let level=Number(document.getElementById("levelInput").value);
@@ -313,26 +288,56 @@ function loadLesson(level){
     });
 }
 
-function checkAnswer(){
-    const selected=document.querySelector('input[name="answer"]:checked');
-    if(!selected){
+
+
+function goBackHome(){
+    document.getElementById("lessonPage").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+    document.getElementById("lfunction startTimer() {
+    clearInterval(timer);
+    timeLeft = 10; // أعادتها لـ 10 ثوانٍ لتناسب طول الملف الصوتي
+    document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+
+    const sound = document.getElementById("tickSound");
+    sound.currentTime = 0; // إعادة الصوت للبداية
+    sound.play().catch(e => console.log("تحتاج للتفاعل مع الصفحة أولاً لتشغيل الصوت"));
+
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+
+        // ملاحظة: بما أن الملف طوله 10 ثوانٍ، سيعمل تلقائياً بالتزامن مع العداد
+        // إذا توقف العداد أو فاز المستخدم، يجب إيقاف الصوت
+        
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            sound.pause(); // إيقاف الصوت عند انتهاء الوقت
+            alert("⛔ انتهى الوقت! خسرت");
+            goBackHome();
+        }
+    }, 1000);
+}
+
+// تعديل بسيط على دالة التحقق لإيقاف الصوت فور الإجابة
+function checkAnswer() {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    const sound = document.getElementById("tickSound");
+    
+    if (!selected) {
         alert("يجب اختيار إجابة!");
         return;
     }
 
     clearInterval(timer);
-    if(selected.value == correctAnswer.toString()){
-        alert("✅ إجابة رائعة! لقد اجتزت المستوى " );
-    }else{
-        alert("❌ خطأ! الإجابة الصحيحة كانت: " );
+    sound.pause(); // إيقاف الصوت فور النقر على زر التحقق
+
+    if (selected.value == correctAnswer.toString()) {
+        alert("✅ إجابة رائعة! لقد اجتزت المستوى " + currentLevel);
+    } else {
+        alert("❌ خطأ! الإجابة الصحيحة كانت: " + correctAnswer);
     }
     goBackHome();
-}
-
-function goBackHome(){
-    document.getElementById("lessonPage").classList.add("hidden");
-    document.getElementById("home").classList.remove("hidden");
-    document.getElementById("levelInput").value="";
+    }evelInput").value="";
 }
 </script>
 
