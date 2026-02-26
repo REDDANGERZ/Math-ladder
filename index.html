@@ -101,31 +101,30 @@ color:black;
 </style>
 </head>
 <body>
+
 <audio id="tickSound" src="kakaist-timer-ticks-314055_first_10_seconds.mp3"></audio>
+
 <div class="container">
+    <button class="toggle" onclick="toggleDark()">🌙 تبديل الوضع</button>
+    <h1> السلم و الرياضيات </h1>
 
-<button class="toggle" onclick="toggleDark()">🌙 تبديل الوضع</button>
+    <div id="home">
+        <p>أدخل مستوى التحدي (1 - 100)</p>
+        <input type="number" id="levelInput" min="1" max="100" placeholder="مثلاً: 75">
+        <button onclick="startLevel()">ابدأ التحدي</button>
+    </div>
 
-<h1> السلم و الرياضيات  </h1>
-
-<div id="home">
-<p>أدخل مستوى التحدي (1 - 100)</p>
-<input type="number" id="levelInput" min="1" max="100" placeholder="مثلاً: 75">
-<button onclick="startLevel()">ابدأ التحدي</button>
-</div>
-
-<div id="lessonPage" class="hidden">
-<h2 id="lessonTitle"></h2>
-<div id="quiz"></div>
-<p id="timerText">⏳ الوقت: 10</p>
-<button onclick="checkAnswer()">تحقق من الإجابة</button>
-</div>
-
+    <div id="lessonPage" class="hidden">
+        <h2 id="lessonTitle"></h2>
+        <div id="quiz"></div>
+        <p id="timerText">⏳ الوقت: 10</p>
+        <button onclick="checkAnswer()">تحقق من الإجابة</button>
+    </div>
 </div>
 
 <script>
+// مصفوفة الأسئلة (نفس الأسئلة السابقة)
 const questions = [
-    // 1-10: معادلات خطية بسيطة
     {q:"x + 4 = 9", options:[5,6,4,3], answer:5},
     {q:"x - 7 = 3", options:[10,9,8,6], answer:10},
     {q:"2x = 12", options:[6,5,4,8], answer:6},
@@ -136,8 +135,6 @@ const questions = [
     {q:"2x + 6 = 14", options:[4,3,5,6], answer:4},
     {q:"7x = 49", options:[7,6,8,9], answer:7},
     {q:"3x - 3 = 9", options:[4,3,5,6], answer:4},
-
-    // 11-20: متباينات
     {q:"x + 3 > 7", options:["x>4","x<4","x=4","x≥4"], answer:"x>4"},
     {q:"x - 5 < 2", options:["x<7","x>7","x=7","x≥7"], answer:"x<7"},
     {q:"2x > 10", options:["x>5","x<5","x=5","x≥5"], answer:"x>5"},
@@ -148,8 +145,6 @@ const questions = [
     {q:"2x-4 > 0", options:["x>2","x<2","x=2","x≥2"], answer:"x>2"},
     {q:"x-6 ≥ 3", options:["x≥9","x≤9","x=9","x>9"], answer:"x≥9"},
     {q:"4x < 16", options:["x<4","x>4","x=4","x≥4"], answer:"x<4"},
-
-    // 21-30: فيثاغورس
     {q:"مثلث قائم ضلعاه 3 و4، الوتر؟", options:[5,6,7,4], answer:5},
     {q:"مثلث قائم ضلعاه 5 و12، الوتر؟", options:[13,14,15,12], answer:13},
     {q:"وتر 10 وأحد الضلعين 6، الضلع الآخر؟", options:[8,7,6,9], answer:8},
@@ -160,8 +155,6 @@ const questions = [
     {q:"9² + 12² =", options:[225,200,180,250], answer:225},
     {q:"8² + 15² =", options:[289,300,250,275], answer:289},
     {q:"12² + 5² =", options:[169,150,180,144], answer:169},
-
-    // 31-40: الجذور
     {q:"√25 =", options:[5,4,6,3], answer:5},
     {q:"√49 =", options:[7,6,8,9], answer:7},
     {q:"√81 =", options:[9,8,7,6], answer:9},
@@ -172,8 +165,6 @@ const questions = [
     {q:"√256 =", options:[16,18,14,20], answer:16},
     {q:"√400 =", options:[20,25,30,15], answer:20},
     {q:"√324 =", options:[18,16,20,22], answer:18},
-
-    // 41-50: الأسس
     {q:"2³ × 2² =", options:[32,16,8,64], answer:32},
     {q:"5⁴ ÷ 5² =", options:[25,5,125,10], answer:25},
     {q:"3² × 3³ =", options:[243,27,81,9], answer:243},
@@ -184,8 +175,6 @@ const questions = [
     {q:"6³ ÷ 6² =", options:[6,36,12,18], answer:6},
     {q:"9² ÷ 9¹ =", options:[9,18,27,81], answer:9},
     {q:"8³ ÷ 8² =", options:[8,16,32,64], answer:8},
-
-    // 51-60: التحليل
     {q:"x² + 5x =", options:["x(x+5)","(x+5)²","x²(5)","(x+5)(x-5)"], answer:"x(x+5)"},
     {q:"x² - 9 =", options:["(x-3)(x+3)","(x-9)(x+1)","x(x-9)","(x-3)²"], answer:"(x-3)(x+3)"},
     {q:"x² + 7x + 10 =", options:["(x+5)(x+2)","(x+10)(x-1)","(x+7)(x+3)","x(x+10)"], answer:"(x+5)(x+2)"},
@@ -196,8 +185,6 @@ const questions = [
     {q:"x² - 25 =", options:["(x-5)(x+5)","(x-25)(x+1)","x(x-25)","(x-5)²"], answer:"(x-5)(x+5)"},
     {q:"x² + 9x + 20 =", options:["(x+4)(x+5)","(x+10)(x-1)","(x+9)(x+2)","x(x+20)"], answer:"(x+4)(x+5)"},
     {q:"x² - 36 =", options:["(x-6)(x+6)","(x-12)(x+3)","x(x-36)","(x-6)²"], answer:"(x-6)(x+6)"},
-
-    // 61-70: مساحات ومحيطات
     {q:"مساحة مربع طول ضلعه 6؟", options:[36,24,12,30], answer:36},
     {q:"محيط مستطيل طوله 5 وعرضه 3؟", options:[16,15,8,10], answer:16},
     {q:"مساحة مثلث قاعدته 4 وارتفاعه 5؟", options:[10,20,9,15], answer:10},
@@ -208,8 +195,6 @@ const questions = [
     {q:"مساحة معين طولا قطريه 6 و 8؟", options:[24,48,14,28], answer:24},
     {q:"حجم مكعب طول ضلعه 3؟", options:[27,9,12,18], answer:27},
     {q:"حجم متوازي مستطيلات (2×3×4)؟", options:[24,9,12,20], answer:24},
-
-    // 71-80: زوايا وهندسة
     {q:"مجموع زوايا المثلث؟", options:[180,360,90,270], answer:180},
     {q:"مجموع زوايا الشكل الرباعي؟", options:[360,180,90,540], answer:360},
     {q:"زاوية مكملة للزاوية 70؟", options:[110,20,30,180], answer:110},
@@ -220,8 +205,6 @@ const questions = [
     {q:"عدد أضلاع السداسي؟", options:[6,5,8,4], answer:6},
     {q:"زاوية مستقيمة قياسها؟", options:[180,90,360,0], answer:180},
     {q:"مجموع زوايا الخماسي المنتظم؟", options:[540,360,720,180], answer:540},
-
-    // 81-90: نسب مئوية وتناسب
     {q:"10% من 200؟", options:[20,10,2,40], answer:20},
     {q:"إذا كان 2x=10 فإن 3x=؟", options:[15,10,5,20], answer:15},
     {q:"تحويل 1/4 إلى نسبة مئوية؟", options:["25%","50%","75%","10%"], answer:"25%"},
@@ -232,8 +215,6 @@ const questions = [
     {q:"اشترى بـ 80 وباع بـ 100، الربح؟", options:["25%","20%","15%","10%"], answer:"25%"},
     {q:"عدد البنات 12 والطلاب 20، نسبة البنات؟", options:["60%","40%","50%","30%"], answer:"60%"},
     {q:"40% من عدد هو 20، ما هو العدد؟", options:[50,40,80,100], answer:50},
-
-    // 91-100: إحصاء واحتمالات
     {q:"المتوسط الحسابي لـ (2, 4, 6)؟", options:[4,3,12,6], answer:4},
     {q:"المنوال للقيم (3, 5, 3, 7)؟", options:[3,5,7,4], answer:3},
     {q:"الوسيط للقيم (1, 3, 7)؟", options:[3,1,7,4], answer:3},
@@ -246,8 +227,8 @@ const questions = [
     {q:"الوسيط لـ (2, 4, 6, 8)؟", options:[5,4,6,10], answer:5}
 ];
 
-let currentLevel=0;
-let correctAnswer=0;
+let currentLevel = 0;
+let correctAnswer = 0;
 let timer;
 let timeLeft = 10;
 
@@ -255,81 +236,70 @@ function toggleDark(){
     document.body.classList.toggle("dark");
 }
 
-
-
 function startLevel(){
-    let level=Number(document.getElementById("levelInput").value);
+    let level = Number(document.getElementById("levelInput").value);
     if(level < 1 || level > questions.length){
         alert("الرجاء إدخال مستوى بين 1 و 100");
         return;
     }
-    currentLevel=level;
+    currentLevel = level;
     document.getElementById("home").classList.add("hidden");
     document.getElementById("lessonPage").classList.remove("hidden");
     loadLesson(level);
 }
 
 function loadLesson(level){
-    startTimer();
-    document.getElementById("lessonTitle").innerText="المستوى "+level;
-
+    document.getElementById("lessonTitle").innerText = "المستوى " + level;
     const qObj = questions[level-1];
     correctAnswer = qObj.answer;
 
-    const quiz=document.getElementById("quiz");
-    quiz.innerHTML=`<p style="font-size:22px; margin:20px 0;">${qObj.q}</p>`;
+    const quiz = document.getElementById("quiz");
+    quiz.innerHTML = `<p style="font-size:22px; margin:20px 0;">${qObj.q}</p>`;
 
-    qObj.options.forEach(opt=>{
-        quiz.innerHTML+=`
+    qObj.options.forEach(opt => {
+        quiz.innerHTML += `
         <label class="quiz-option">
             <input type="radio" name="answer" value="${opt}">
             ${opt}
         </label>`;
     });
+
+    startTimer(); // استدعاء التايمر بعد تحميل السؤال
 }
 
-
-
-function goBackHome(){
-    document.getElementById("lessonPage").classList.add("hidden");
-    document.getElementById("home").classList.remove("hidden");
-    document.getElementById("lfunction startTimer() {
+function startTimer() {
     clearInterval(timer);
-    timeLeft = 10; // أعادتها لـ 10 ثوانٍ لتناسب طول الملف الصوتي
+    timeLeft = 10;
     document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
 
     const sound = document.getElementById("tickSound");
-    sound.currentTime = 0; // إعادة الصوت للبداية
-    sound.play().catch(e => console.log("تحتاج للتفاعل مع الصفحة أولاً لتشغيل الصوت"));
+    sound.currentTime = 0; 
+    sound.play().catch(e => console.log("الصوت بانتظار تفاعلك"));
 
     timer = setInterval(() => {
         timeLeft--;
         document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
 
-        // ملاحظة: بما أن الملف طوله 10 ثوانٍ، سيعمل تلقائياً بالتزامن مع العداد
-        // إذا توقف العداد أو فاز المستخدم، يجب إيقاف الصوت
-        
         if (timeLeft <= 0) {
             clearInterval(timer);
-            sound.pause(); // إيقاف الصوت عند انتهاء الوقت
-            alert("⛔ انتهى الوقت! خسرت");
+            sound.pause();
+            alert("⛔ انتهى الوقت! حاول مجدداً");
             goBackHome();
         }
     }, 1000);
 }
 
-// تعديل بسيط على دالة التحقق لإيقاف الصوت فور الإجابة
 function checkAnswer() {
     const selected = document.querySelector('input[name="answer"]:checked');
     const sound = document.getElementById("tickSound");
-    
+
     if (!selected) {
         alert("يجب اختيار إجابة!");
         return;
     }
 
     clearInterval(timer);
-    sound.pause(); // إيقاف الصوت فور النقر على زر التحقق
+    sound.pause(); 
 
     if (selected.value == correctAnswer.toString()) {
         alert("✅ إجابة رائعة! لقد اجتزت المستوى " + currentLevel);
@@ -337,7 +307,12 @@ function checkAnswer() {
         alert("❌ خطأ! الإجابة الصحيحة كانت: " + correctAnswer);
     }
     goBackHome();
-    }evelInput").value="";
+}
+
+function goBackHome(){
+    document.getElementById("lessonPage").classList.add("hidden");
+    document.getElementById("home").classList.remove("hidden");
+    document.getElementById("levelInput").value = "";
 }
 </script>
 
