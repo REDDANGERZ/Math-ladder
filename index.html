@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🪜 سُلَّم Math 100</title>
+<title>🪜 سُلَّم الرياضيات - الصف الثامن</title>
 
 <style>
 :root{
---bg: linear-gradient(135deg,#141E30,#243B55);
+--bg: linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);
 --card: rgba(255,255,255,0.1);
 --text: #ffffff;
---button: linear-gradient(45deg,#ff9800,#ff5722);
+--button: linear-gradient(45deg,#4facfe,#00f2fe);
 --shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
@@ -25,6 +25,7 @@ body{
 margin:0;
 font-family:'Segoe UI', Tahoma, sans-serif;
 background:var(--bg);
+background-attachment: fixed;
 color:var(--text);
 text-align:center;
 transition:0.4s;
@@ -32,13 +33,14 @@ transition:0.4s;
 
 .container{
 padding:25px;
-max-width:450px;
+max-width:500px;
 margin:auto;
 }
 
 h1{
 font-size:24px;
 margin-bottom:15px;
+text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 input{
@@ -49,6 +51,7 @@ border-radius:14px;
 border:none;
 margin-bottom:12px;
 box-shadow:var(--shadow);
+outline: none;
 }
 
 button{
@@ -63,21 +66,28 @@ margin-top:10px;
 cursor:pointer;
 transition:0.3s;
 box-shadow:var(--shadow);
+font-weight: bold;
 }
 
 button:hover{
 transform:translateY(-3px);
-opacity:0.9;
+filter: brightness(1.1);
 }
 
 .quiz-option{
 display:block;
 background:var(--card);
-padding:14px;
+padding:15px;
 margin:10px 0;
 border-radius:14px;
 cursor:pointer;
 text-align: right;
+border: 1px solid rgba(255,255,255,0.1);
+transition: 0.2s;
+}
+
+.quiz-option:hover{
+background: rgba(255,255,255,0.2);
 }
 
 .hidden{display:none;}
@@ -93,11 +103,6 @@ font-size:14px;
 cursor:pointer;
 width: auto;
 }
-
-.toggle:hover{
-background:var(--text);
-color:black;
-}
 </style>
 </head>
 <body>
@@ -106,11 +111,11 @@ color:black;
 
 <button class="toggle" onclick="toggleDark()">🌙 تبديل الوضع</button>
 
-<h1> السلم و الرياضيات  </h1>
+<h1>🪜 سلم الرياضيات (ثامن)</h1>
 
 <div id="home">
-<p>أدخل مستوى التحدي (1 - 100)</p>
-<input type="number" id="levelInput" min="1" max="100" placeholder="مثلاً: 75">
+<p>أدخل رقم التحدي (1 - 100)</p>
+<input type="number" id="levelInput" min="1" max="100" placeholder="مثلاً: 1">
 <button onclick="startLevel()">ابدأ التحدي</button>
 </div>
 
@@ -124,126 +129,117 @@ color:black;
 </div>
 
 <script>
+// توليد 100 سؤال لمنهاج الصف الثامن
 const questions = [
-    // 1-10: معادلات خطية بسيطة
-    {q:"x + 4 = 9", options:[5,6,4,3], answer:5},
-    {q:"x - 7 = 3", options:[10,9,8,6], answer:10},
-    {q:"2x = 12", options:[6,5,4,8], answer:6},
-    {q:"3x = 15", options:[5,6,4,3], answer:5},
-    {q:"x ÷ 5 = 4", options:[20,15,25,10], answer:20},
-    {q:"4x + 2 = 10", options:[2,3,4,1], answer:2},
-    {q:"5x - 5 = 20", options:[5,4,6,3], answer:5},
-    {q:"2x + 6 = 14", options:[4,3,5,6], answer:4},
-    {q:"7x = 49", options:[7,6,8,9], answer:7},
-    {q:"3x - 3 = 9", options:[4,3,5,6], answer:4},
+    // 1-20: المتباينات الخطية
+    {q:"حل المتباينة: x + 5 > 12", options:["x > 7","x < 7","x > 17","x < 17"], answer:"x > 7"},
+    {q:"حل المتباينة: x - 3 ≤ 10", options:["x ≤ 13","x ≥ 13","x ≤ 7","x ≥ 7"], answer:"x ≤ 13"},
+    {q:"حل المتباينة: 2x < 8", options:["x < 4","x > 4","x < 16","x > 16"], answer:"x < 4"},
+    {q:"عند ضرب متباينة في عدد سالب..", options:["نعكس الإشارة","تبقى كما هي","تتحول لمساواة","تصبح صفراً"], answer:"نعكس الإشارة"},
+    {q:"حل المتباينة: -3x > 9", options:["x < -3","x > -3","x < 3","x > 3"], answer:"x < -3"},
+    {q:"أي مما يلي يمثل 'x أكبر من أو يساوي 5'؟", options:["x ≥ 5","x > 5","x ≤ 5","x < 5"], answer:"x ≥ 5"},
+    {q:"حل المتباينة: x/2 ≥ 4", options:["x ≥ 8","x ≤ 8","x ≥ 2","x ≤ 2"], answer:"x ≥ 8"},
+    {q:"حل المتباينة: 2x + 1 > 7", options:["x > 3","x > 4","x < 3","x < 4"], answer:"x > 3"},
+    {q:"حل المتباينة: 5 - x < 2", options:["x > 3","x < 3","x > -3","x < -3"], answer:"x > 3"},
+    {q:"المتباينة 4 ≤ x تعني أن x:", options:["أكبر من أو تساوي 4","أصغر من أو تساوي 4","تساوي 4 فقط","لا شيء مما سبق"], answer:"أكبر من أو تساوي 4"},
+    {q:"حل المتباينة: 3x - 2 ≤ 10", options:["x ≤ 4","x ≥ 4","x ≤ 3","x ≥ 3"], answer:"x ≤ 4"},
+    {q:"حل المتباينة: -2x + 4 ≥ 0", options:["x ≤ 2","x ≥ 2","x ≤ -2","x ≥ -2"], answer:"x ≤ 2"},
+    {q:"إذا كان x + 4 > 4 فإن:", options:["x > 0","x < 0","x > 8","x < 8"], answer:"x > 0"},
+    {q:"حل المتباينة المركبة: 1 < x + 1 < 5", options:["0 < x < 4","1 < x < 5","2 < x < 6","-1 < x < 3"], answer:"0 < x < 4"},
+    {q:"أي عدد يحقق المتباينة x - 2 > 5؟", options:["8","7","5","0"], answer:"8"},
+    {q:"حل المتباينة: x/(-3) < 2", options:["x > -6","x < -6","x > 6","x < 6"], answer:"x > -6"},
+    {q:"تمثيل المتباينة x > 2 على خط الأعداد يكون بدائرة:", options:["مفتوحة نحو اليمين","مغلقة نحو اليمين","مفتوحة نحو اليسار","مغلقة نحو اليسار"], answer:"مفتوحة نحو اليمين"},
+    {q:"حل المتباينة: 7x ≤ 14", options:["x ≤ 2","x ≥ 2","x < 2","x > 2"], answer:"x ≤ 2"},
+    {q:"حل المتباينة: 10 ≥ 2x", options:["x ≤ 5","x ≥ 5","x < 5","x > 5"], answer:"x ≤ 5"},
+    {q:"إذا كان عمر خالد x لا يقل عن 15 سنة:", options:["x ≥ 15","x > 15","x ≤ 15","x < 15"], answer:"x ≥ 15"},
 
-    // 11-20: متباينات
-    {q:"x + 3 > 7", options:["x>4","x<4","x=4","x≥4"], answer:"x>4"},
-    {q:"x - 5 < 2", options:["x<7","x>7","x=7","x≥7"], answer:"x<7"},
-    {q:"2x > 10", options:["x>5","x<5","x=5","x≥5"], answer:"x>5"},
-    {q:"3x < 12", options:["x<4","x>4","x=4","x≥4"], answer:"x<4"},
-    {q:"x/4 ≥ 3", options:["x≥12","x≤12","x=12","x>12"], answer:"x≥12"},
-    {q:"5x ≤ 20", options:["x≤4","x≥4","x=4","x<4"], answer:"x≤4"},
-    {q:"x+8 ≤ 10", options:["x≤2","x≥2","x=2","x<2"], answer:"x≤2"},
-    {q:"2x-4 > 0", options:["x>2","x<2","x=2","x≥2"], answer:"x>2"},
-    {q:"x-6 ≥ 3", options:["x≥9","x≤9","x=9","x>9"], answer:"x≥9"},
-    {q:"4x < 16", options:["x<4","x>4","x=4","x≥4"], answer:"x<4"},
+    // 21-40: نظام المعادلات (التعويض والحذف)
+    {q:"حل النظام بالتعويض: y=x , x+y=10", options:["(5,5)","(4,6)","(0,10)","(5,0)"], answer:"(5,5)"},
+    {q:"حل النظام: x+y=5 , x-y=1", options:["(3,2)","(4,1)","(2,3)","(5,0)"], answer:"(3,2)"},
+    {q:"في نظام المعادلات، إذا تساوى المستقيمان فالحل:", options:["عدد لا نهائي","لا يوجد حل","حل وحيد","صفر"], answer:"عدد لا نهائي"},
+    {q:"في نظام المعادلات، إذا توازى المستقيمان فالحل:", options:["لا يوجد حل","عدد لا نهائي","حل وحيد","(0,0)"], answer:"لا يوجد حل"},
+    {q:"حل النظام: y=2x , y=x+3", options:["(3,6)","(1,2)","(2,4)","(0,3)"], answer:"(3,6)"},
+    {q:"حل النظام: x+y=0 , x-y=4", options:["(2,-2)","(-2,2)","(4,0)","(0,-4)"], answer:"(2,-2)"},
+    {q:"أفضل طريقة لحل النظام: y=3x+1 , 2x+y=10؟", options:["التعويض","الحذف","الرسم","التخمين"], answer:"التعويض"},
+    {q:"حل النظام: 2x+y=5 , y=1", options:["(2,1)","(1,1)","(3,1)","(0,1)"], answer:"(2,1)"},
+    {q:"حل النظام بالحذف: x+y=6 , x+y=4؟", options:["لا يوجد حل","عدد لا نهائي","(5,1)","(3,3)"], answer:"لا يوجد حل"},
+    {q:"حل النظام: x=3 , y=x+2", options:["(3,5)","(5,3)","(3,3)","(0,2)"], answer:"(3,5)"},
+    {q:"إذا كان x+y=10 و x=2، فإن y=؟", options:["8","10","12","2"], answer:"8"},
+    {q:"نقطة تقاطع x=0 و y=0 هي:", options:["(0,0)","(1,1)","لا تتقاطع","(0,1)"], answer:"(0,0)"},
+    {q:"حل النظام: 2x+2y=10 , x+y=5", options:["عدد لا نهائي","لا يوجد حل","(5,0)","(0,5)"], answer:"عدد لا نهائي"},
+    {q:"حل النظام: y=x-1 , y=-x+1", options:["(1,0)","(0,1)","(0,0)","(1,1)"], answer:"(1,0)"},
+    {q:"أي زوج هو حل لـ x+y=7؟", options:["(3,4)","(2,4)","(1,5)","(7,1)"], answer:"(3,4)"},
+    {q:"حل النظام: 3x=9 , y+x=5", options:["(3,2)","(2,3)","(3,3)","(9,0)"], answer:"(3,2)"},
+    {q:"حل النظام: x-y=10 , y=2", options:["(12,2)","(8,2)","(10,2)","(2,12)"], answer:"(12,2)"},
+    {q:"إذا كان x+y=5 و 2x+2y=12:", options:["لا يوجد حل","عدد لا نهائي","(3,2)","(0,5)"], answer:"لا يوجد حل"},
+    {q:"حل النظام: y=2 , x=y+3", options:["(5,2)","(2,5)","(3,2)","(0,2)"], answer:"(5,2)"},
+    {q:"قيمة x في النظام: x+y=4 , x-y=2؟", options:["3","1","2","4"], answer:"3"},
 
-    // 21-30: فيثاغورس
-    {q:"مثلث قائم ضلعاه 3 و4، الوتر؟", options:[5,6,7,4], answer:5},
-    {q:"مثلث قائم ضلعاه 5 و12، الوتر؟", options:[13,14,15,12], answer:13},
-    {q:"وتر 10 وأحد الضلعين 6، الضلع الآخر؟", options:[8,7,6,9], answer:8},
-    {q:"مثلث قائم ضلعاه 8 و15، الوتر؟", options:[17,16,18,20], answer:17},
-    {q:"وتر 25 وأحد الضلعين 7، الضلع الآخر؟", options:[24,20,18,22], answer:24},
-    {q:"6² + 8² =", options:[100,90,80,70], answer:100},
-    {q:"5² + 12² =", options:[169,144,150,130], answer:169},
-    {q:"9² + 12² =", options:[225,200,180,250], answer:225},
-    {q:"8² + 15² =", options:[289,300,250,275], answer:289},
-    {q:"12² + 5² =", options:[169,150,180,144], answer:169},
+    // 41-60: الجذور والأسس النسبية
+    {q:"قيمة √64 هي:", options:[8,7,9,6], answer:8},
+    {q:"قيمة ∛27 هي:", options:[3,9,2,4], answer:3},
+    {q:"قيمة (25)^(1/2) هي:", options:[5,12.5,50,2], answer:5},
+    {q:"قيمة (8)^(1/3) هي:", options:[2,4,8,2.6], answer:2},
+    {q:"تبسيط √(x²) هو:", options:["|x|","x²","2x","√x"], answer:"|x|"},
+    {q:"قيمة √100 + √36 هي:", options:[16,14,64,136], answer:16},
+    {q:"قيمة ∛(-8) هي:", options:[-2,2,"لا يوجد","-4"], answer:-2},
+    {q:"العدد √2 ينتمي لمجموعة الأعداد:", options:["غير النسبية","الصحيحة","الطبيعية","النسبية"], answer:"غير النسبية"},
+    {q:"قيمة (16)^(1/4) هي:", options:[2,4,8,1], answer:2},
+    {q:"قيمة (4)^(3/2) هي:", options:[8,6,4,16], answer:8},
+    {q:"قيمة √0.09 هي:", options:[0.3,0.03,3,0.9], answer:0.3},
+    {q:"قيمة ∛1000 هي:", options:[10,100,1,30], answer:10},
+    {q:"قيمة √1 هي:", options:[1,0,-1,2], answer:1},
+    {q:"قيمة (27)^(2/3) هي:", options:[9,3,6,18], answer:9},
+    {q:"قيمة √(25/49) هي:", options:["5/7","25/49","7/5","10/14"], answer:"5/7"},
+    {q:"قيمة √2 × √2 هي:", options:[2,4,1,√4], answer:2},
+    {q:"تبسيط √(x^16) هو:", options:["x^8","x^4","x^2","x^32"], answer:"x^8"},
+    {q:"قيمة ∛0.001 هي:", options:[0.1,0.01,0.001,1], answer:0.1},
+    {q:"أي مما يلي عدد غير نسبي؟", options:["√5","√4","0.5","3"], answer:"√5"},
+    {q:"قيمة (1/4)^(-1/2) هي:", options:[2,0.5,-2,4], answer:2},
 
-    // 31-40: الجذور
-    {q:"√25 =", options:[5,4,6,3], answer:5},
-    {q:"√49 =", options:[7,6,8,9], answer:7},
-    {q:"√81 =", options:[9,8,7,6], answer:9},
-    {q:"√144 =", options:[12,10,14,16], answer:12},
-    {q:"√169 =", options:[13,12,14,15], answer:13},
-    {q:"√196 =", options:[14,12,16,18], answer:14},
-    {q:"√225 =", options:[15,14,16,18], answer:15},
-    {q:"√256 =", options:[16,18,14,20], answer:16},
-    {q:"√400 =", options:[20,25,30,15], answer:20},
-    {q:"√324 =", options:[18,16,20,22], answer:18},
+    // 61-80: التحليل (عامل مشترك، فرق بين مربعين)
+    {q:"تحليل x² - 9 هو:", options:["(x-3)(x+3)","(x-3)²","(x+3)²","x(x-9)"], answer:"(x-3)(x+3)"},
+    {q:"العامل المشترك الأكبر لـ 5x + 10 هو:", options:[5,10,"x","5x"], answer:5},
+    {q:"تحليل x² + 5x هو:", options:["x(x+5)","5(x+1)","x²(1+5)","(x+5)²"], answer:"x(x+5)"},
+    {q:"تحليل x² - 16 هو:", options:["(x-4)(x+4)","(x-8)(x+8)","(x-4)²","x(x-16)"], answer:"(x-4)(x+4)"},
+    {q:"تحليل 2x² - 8 هو:", options:["2(x-2)(x+2)","(2x-4)(2x+4)","2(x-4)","(x-2)(x+2)"], answer:"2(x-2)(x+2)"},
+    {q:"تحليل x² + 6x + 9 هو:", options:["(x+3)²","(x-3)²","(x+3)(x-3)","x(x+6)+9"], answer:"(x+3)²"},
+    {q:"تحليل x² - 2x + 1 هو:", options:["(x-1)²","(x+1)²","(x-1)(x+1)","(x-2)²"], answer:"(x-1)²"},
+    {q:"تحليل x² - 25 هو:", options:["(x-5)(x+5)","(x-5)²","x(x-25)","(x+25)(x-1)"], answer:"(x-5)(x+5)"},
+    {q:"العامل المشترك لـ 3x² - 6x هو:", options:["3x","x","3","6x"], answer:"3x"},
+    {q:"تحليل x² - 1 هو:", options:["(x-1)(x+1)","(x-1)²","x(x-1)","1(x-1)"], answer:"(x-1)(x+1)"},
+    {q:"تحليل x² + 7x + 12 هو:", options:["(x+3)(x+4)","(x+2)(x+6)","(x+1)(x+12)","(x+7)(x+1)"], answer:"(x+3)(x+4)"},
+    {q:"تحليل x² - 5x + 6 هو:", options:["(x-2)(x-3)","(x-1)(x-6)","(x+2)(x+3)","(x-5)(x+1)"], answer:"(x-2)(x-3)"},
+    {q:"تحليل 4x² - 1 هو:", options:["(2x-1)(2x+1)","(4x-1)(4x+1)","(2x-1)²","2x(2x-1)"], answer:"(2x-1)(2x+1)"},
+    {q:"تحليل x² + 2x + 1 هو:", options:["(x+1)²","(x+2)²","x(x+2)+1","(x-1)²"], answer:"(x+1)²"},
+    {q:"العامل المشترك لـ ab + ac هو:", options:["a","b","c","bc"], answer:"a"},
+    {q:"تحليل x² - 100 هو:", options:["(x-10)(x+10)","(x-50)(x+50)","(x-10)²","x(x-100)"], answer:"(x-10)(x+10)"},
+    {q:"تحليل x² - 8x + 16 هو:", options:["(x-4)²","(x+4)²","(x-4)(x+4)","(x-8)²"], answer:"(x-4)²"},
+    {q:"تحليل 3x + 3y هو:", options:["3(x+y)","3xy","x+y","3x+y"], answer:"3(x+y)"},
+    {q:"تحليل x² + 3x + 2 هو:", options:["(x+1)(x+2)","(x+3)(x+1)","(x+1.5)²","x(x+3)+2"], answer:"(x+1)(x+2)"},
+    {q:"تحليل x² - 49 هو:", options:["(x-7)(x+7)","(x-7)²","x(x-49)","(x+7)²"], answer:"(x-7)(x+7)"},
 
-    // 41-50: الأسس
-    {q:"2³ × 2² =", options:[32,16,8,64], answer:32},
-    {q:"5⁴ ÷ 5² =", options:[25,5,125,10], answer:25},
-    {q:"3² × 3³ =", options:[243,27,81,9], answer:243},
-    {q:"10³ ÷ 10¹ =", options:[100,1000,10,1], answer:100},
-    {q:"4² × 4¹ =", options:[64,16,32,8], answer:64},
-    {q:"2⁵ ÷ 2³ =", options:[4,8,16,2], answer:4},
-    {q:"7² × 7¹ =", options:[343,49,98,21], answer:343},
-    {q:"6³ ÷ 6² =", options:[6,36,12,18], answer:6},
-    {q:"9² ÷ 9¹ =", options:[9,18,27,81], answer:9},
-    {q:"8³ ÷ 8² =", options:[8,16,32,64], answer:8},
-
-    // 51-60: التحليل
-    {q:"x² + 5x =", options:["x(x+5)","(x+5)²","x²(5)","(x+5)(x-5)"], answer:"x(x+5)"},
-    {q:"x² - 9 =", options:["(x-3)(x+3)","(x-9)(x+1)","x(x-9)","(x-3)²"], answer:"(x-3)(x+3)"},
-    {q:"x² + 7x + 10 =", options:["(x+5)(x+2)","(x+10)(x-1)","(x+7)(x+3)","x(x+10)"], answer:"(x+5)(x+2)"},
-    {q:"x² - 4 =", options:["(x-2)(x+2)","(x-4)(x+1)","x(x-4)","(x-2)²"], answer:"(x-2)(x+2)"},
-    {q:"x² + 6x + 9 =", options:["(x+3)²","(x+9)(x-1)","x(x+9)","(x+6)²"], answer:"(x+3)²"},
-    {q:"x² - 16 =", options:["(x-4)(x+4)","(x-8)(x+2)","x(x-16)","(x-4)²"], answer:"(x-4)(x+4)"},
-    {q:"x² + 8x +16 =", options:["(x+4)²","(x+8)(x+2)","x(x+16)","(x+2)²"], answer:"(x+4)²"},
-    {q:"x² - 25 =", options:["(x-5)(x+5)","(x-25)(x+1)","x(x-25)","(x-5)²"], answer:"(x-5)(x+5)"},
-    {q:"x² + 9x + 20 =", options:["(x+4)(x+5)","(x+10)(x-1)","(x+9)(x+2)","x(x+20)"], answer:"(x+4)(x+5)"},
-    {q:"x² - 36 =", options:["(x-6)(x+6)","(x-12)(x+3)","x(x-36)","(x-6)²"], answer:"(x-6)(x+6)"},
-
-    // 61-70: مساحات ومحيطات
-    {q:"مساحة مربع طول ضلعه 6؟", options:[36,24,12,30], answer:36},
-    {q:"محيط مستطيل طوله 5 وعرضه 3؟", options:[16,15,8,10], answer:16},
-    {q:"مساحة مثلث قاعدته 4 وارتفاعه 5؟", options:[10,20,9,15], answer:10},
-    {q:"محيط دائرة نصف قطرها 7 (π=22/7)؟", options:[44,22,154,14], answer:44},
-    {q:"مساحة دائرة نصف قطرها 7 (π=22/7)؟", options:[154,44,49,14], answer:154},
-    {q:"مساحة متوازي أضلاع قاعدته 8 وارتفاعه 3؟", options:[24,11,22,16], answer:24},
-    {q:"محيط مربع مساحته 25؟", options:[20,25,10,15], answer:20},
-    {q:"مساحة معين طولا قطريه 6 و 8؟", options:[24,48,14,28], answer:24},
-    {q:"حجم مكعب طول ضلعه 3؟", options:[27,9,12,18], answer:27},
-    {q:"حجم متوازي مستطيلات (2×3×4)؟", options:[24,9,12,20], answer:24},
-
-    // 71-80: زوايا وهندسة
-    {q:"مجموع زوايا المثلث؟", options:[180,360,90,270], answer:180},
-    {q:"مجموع زوايا الشكل الرباعي؟", options:[360,180,90,540], answer:360},
-    {q:"زاوية مكملة للزاوية 70؟", options:[110,20,30,180], answer:110},
-    {q:"زاوية متممة للزاوية 40؟", options:[50,140,90,60], answer:50},
-    {q:"عدد أقطار الشكل الخماسي؟", options:[5,2,3,10], answer:5},
-    {q:"الزاوية القائمة قياسها؟", options:[90,180,45,360], answer:90},
-    {q:"المثلث متساوي الأضلاع زاوية الواحدة؟", options:[60,90,45,30], answer:60},
-    {q:"عدد أضلاع السداسي؟", options:[6,5,8,4], answer:6},
-    {q:"زاوية مستقيمة قياسها؟", options:[180,90,360,0], answer:180},
-    {q:"مجموع زوايا الخماسي المنتظم؟", options:[540,360,720,180], answer:540},
-
-    // 81-90: نسب مئوية وتناسب
-    {q:"10% من 200؟", options:[20,10,2,40], answer:20},
-    {q:"إذا كان 2x=10 فإن 3x=؟", options:[15,10,5,20], answer:15},
-    {q:"تحويل 1/4 إلى نسبة مئوية؟", options:["25%","50%","75%","10%"], answer:"25%"},
-    {q:"سعر سلعة 100 زاد 20%، السعر الجديد؟", options:[120,110,150,80], answer:120},
-    {q:"نسبة 3 إلى 12 في أبسط صورة؟", options:["1:4","1:3","1:2","3:4"], answer:"1:4"},
-    {q:"إذا كان x/4 = 3/2 فإن x=؟", options:[6,4,8,12], answer:6},
-    {q:"75% من 80؟", options:[60,40,20,70], answer:60},
-    {q:"اشترى بـ 80 وباع بـ 100، الربح؟", options:["25%","20%","15%","10%"], answer:"25%"},
-    {q:"عدد البنات 12 والطلاب 20، نسبة البنات؟", options:["60%","40%","50%","30%"], answer:"60%"},
-    {q:"40% من عدد هو 20، ما هو العدد؟", options:[50,40,80,100], answer:50},
-
-    // 91-100: إحصاء واحتمالات
-    {q:"المتوسط الحسابي لـ (2, 4, 6)؟", options:[4,3,12,6], answer:4},
-    {q:"المنوال للقيم (3, 5, 3, 7)؟", options:[3,5,7,4], answer:3},
-    {q:"الوسيط للقيم (1, 3, 7)؟", options:[3,1,7,4], answer:3},
-    {q:"احتمال ظهور صورة عند رمي عملة؟", options:["1/2","1/4","1","0"], answer:"1/2"},
-    {q:"احتمال ظهور الرقم 7 في حجر النرد؟", options:[0,1,"1/6","1/2"], answer:0},
-    {q:"المدى للقيم (10, 2, 5, 8)؟", options:[8,10,2,5], answer:8},
-    {q:"احتمال حدث مؤكد؟", options:[1,0,"1/2","100"], answer:1},
-    {q:"المتوسط لـ (10, 20)؟", options:[15,30,10,25], answer:15},
-    {q:"عدد النواتج لرمي حجر نرد واحد؟", options:[6,12,36,1], answer:6},
-    {q:"الوسيط لـ (2, 4, 6, 8)؟", options:[5,4,6,10], answer:5}
+    // 81-100: مراجعة شاملة وثلاثي الحدود
+    {q:"حل المتباينة: 2x - 5 > 1", options:["x > 3","x < 3","x > 2","x < 2"], answer:"x > 3"},
+    {q:"نظام: x=1, y=2. قيمة x+y؟", options:[3,1,2,0], answer:3},
+    {q:"قيمة √144 هي:", options:[12,14,10,16], answer:12},
+    {q:"قيمة ∛64 هي:", options:[4,8,16,2], answer:4},
+    {q:"تبسيط x⁵ ÷ x³ هو:", options:["x²","x⁸","x¹⁵","x"], answer:"x²"},
+    {q:"حل المتباينة: -x < -5", options:["x > 5","x < 5","x > -5","x < -5"], answer:"x > 5"},
+    {q:"تحليل x² + 10x + 25 هو:", options:["(x+5)²","(x-5)²","(x+10)²","(x+5)(x-5)"], answer:"(x+5)²"},
+    {q:"قيمة (9)^(1/2) + (8)^(1/3) هي:", options:[5,17,11,5.5], answer:5},
+    {q:"حل النظام: x+y=2 , x-y=0", options:["(1,1)","(2,0)","(0,2)","(1,0)"], answer:"(1,1)"},
+    {q:"العامل المشترك لـ 4x² + 8x هو:", options:["4x","4","x","8x"], answer:"4x"},
+    {q:"قيمة √(-4)² هي:", options:[4,-4,16,"غير معرف"], answer:4},
+    {q:"تحليل x² - 121 هو:", options:["(x-11)(x+11)","(x-11)²","(x-12)(x+12)","x(x-121)"], answer:"(x-11)(x+11)"},
+    {q:"حل المتباينة: 3x ≥ 0", options:["x ≥ 0","x > 0","x ≤ 0","لا حل"], answer:"x ≥ 0"},
+    {q:"إذا كان ∛x = 2 فإن x=؟", options:[8,4,6,2], answer:8},
+    {q:"قيمة (10000)^(1/4) هي:", options:[10,100,1000,1], answer:10},
+    {q:"حل النظام: y=x+1 , y=2x", options:["(1,2)","(2,3)","(0,1)","(1,1)"], answer:"(1,2)"},
+    {q:"تحليل x² - 11x + 24 هو:", options:["(x-3)(x-8)","(x-4)(x-6)","(x-2)(x-12)","(x+3)(x+8)"], answer:"(x-3)(x-8)"},
+    {q:"قيمة √18 تبسط إلى:", options:["3√2","2√3","9√2","6"], answer:"3√2"},
+    {q:"مجموعة حل x² + 1 = 0 في الأعداد الحقيقية:", options:["فاي (لا حل)","1","-1","0"], answer:"فاي (لا حل)"},
+    {q:"قيمة (x^a) × (x^b) هي:", options:["x^(a+b)","x^(ab)","x^(a-b)","ax+b"], answer:"x^(a+b)"}
 ];
 
 let currentLevel=0;
@@ -257,34 +253,30 @@ function toggleDark(){
 
 function startTimer(){
     clearInterval(timer);
-    timeLeft = 10; // أعدتها لـ 10 ثواني لتتطابق مع ملفك الصوتي
-    document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
-
+    timeLeft = 10;
     const sound = document.getElementById("tickSound");
+    document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+    
+    sound.currentTime = 0;
+    sound.play().catch(e => console.log("الصوت يحتاج لتفاعل"));
 
     timer = setInterval(()=>{
         timeLeft--;
         document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
 
-        // تشغيل صوت التيك في كل ثانية
-        if (sound) {
-            sound.pause();        // إيقاف الصوت الحالي
-            sound.currentTime = 0; // العودة للبداية
-            sound.play().catch(e => console.log("Audio play deferred")); // تشغيل مع تلافي أخطاء المتصفح
-        }
-
         if(timeLeft <= 0){
             clearInterval(timer);
-            alert("⛔ انتهى الوقت! خسرت");
-            goBackHome(); // تصحيح اسم الدالة لتعود للرئيسية
+            sound.pause();
+            alert("⛔ انتهى الوقت! حاول مجدداً");
+            goBackHome();
         }
-    }, 1000);
+    },1000);
 }
 
 function startLevel(){
     let level=Number(document.getElementById("levelInput").value);
     if(level < 1 || level > questions.length){
-        alert("الرجاء إدخال مستوى بين 1 و 100");
+        alert("الرجاء إدخال رقم بين 1 و 100");
         return;
     }
     currentLevel=level;
@@ -294,13 +286,12 @@ function startLevel(){
 }
 
 function loadLesson(level){
-    document.getElementById("lessonTitle").innerText="المستوى "+level;
-
+    document.getElementById("lessonTitle").innerText="التحدي رقم "+level;
     const qObj = questions[level-1];
     correctAnswer = qObj.answer;
 
     const quiz=document.getElementById("quiz");
-    quiz.innerHTML=`<p style="font-size:22px; margin:20px 0;">${qObj.q}</p>`;
+    quiz.innerHTML=`<p style="font-size:22px; margin:20px 0; font-weight:bold;">${qObj.q}</p>`;
 
     qObj.options.forEach(opt=>{
         quiz.innerHTML+=`
@@ -309,29 +300,42 @@ function loadLesson(level){
             ${opt}
         </label>`;
     });
-    
-    // تشغيل التوقيت بعد تحميل السؤال
+
     startTimer();
 }
 
 function checkAnswer(){
     const selected=document.querySelector('input[name="answer"]:checked');
+    const sound = document.getElementById("tickSound");
+
     if(!selected){
-        alert("يجب اختيار إجابة!");
+        alert("اختر إجابة أولاً!");
         return;
     }
 
     clearInterval(timer);
+    sound.pause();
+
     if(selected.value == correctAnswer.toString()){
-        alert("✅ إجابة رائعة!");
+        alert("✅ بطل! إجابة صحيحة.");
+        // الانتقال التلقائي للمستوى التالي إذا أراد المستخدم
+        let next = currentLevel + 1;
+        if(next <= 100) {
+            document.getElementById("levelInput").value = next;
+            startLevel();
+        } else {
+            alert("تهانينا! ختمت الـ 100 سؤال!");
+            goBackHome();
+        }
     }else{
-        alert("❌ خطأ! الإجابة الصحيحة كانت: " );
+        alert("❌ خطأ! الإجابة الصحيحة هي: " + correctAnswer);
+        goBackHome();
     }
-    goBackHome();
 }
 
 function goBackHome(){
-    clearInterval(timer); // إيقاف التوقيت عند العودة
+    clearInterval(timer);
+    document.getElementById("tickSound").pause();
     document.getElementById("lessonPage").classList.add("hidden");
     document.getElementById("home").classList.remove("hidden");
     document.getElementById("levelInput").value="";
