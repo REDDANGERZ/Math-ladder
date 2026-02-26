@@ -238,14 +238,158 @@ const questions = [
     {q:"حل النظام: y=x+1 , y=2x", options:["(1,2)","(2,3)","(0,1)","(1,1)"], answer:"(1,2)"},
     {q:"تحليل x² - 11x + 24 هو:", options:["(x-3)(x-8)","(x-4)(x-6)","(x-2)(x-12)","(x+3)(x+8)"], answer:"(x-3)(x-8)"},
     {q:"قيمة √18 تبسط إلى:", options:["3√2","2√3","9√2","6"], answer:"3√2"},
-    {q:"مجموعة حل x² + 1 = 0 في الأعداد الحقيقية:", options:["فاي (لا حل)","1","-1","0"], answer:"فاي (لا حل)"},
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🪜 سُلَّم الرياضيات - الصف الثامن</title>
+
+<style>
+:root{
+--bg: linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);
+--card: rgba(255,255,255,0.1);
+--text: #ffffff;
+--button: linear-gradient(45deg,#4facfe,#00f2fe);
+--shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.dark{
+--bg: #0f0f0f;
+--card: #1c1c1c;
+--text: #eee;
+--button: linear-gradient(45deg,#333,#555);
+}
+
+body{
+margin:0;
+font-family:'Segoe UI', Tahoma, sans-serif;
+background:var(--bg);
+background-attachment: fixed;
+color:var(--text);
+text-align:center;
+transition:0.4s;
+}
+
+.container{
+padding:25px;
+max-width:500px;
+margin:auto;
+}
+
+h1{
+font-size:24px;
+margin-bottom:15px;
+text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+input[type="number"]{
+width:85%;
+padding:14px;
+font-size:17px;
+border-radius:14px;
+border:none;
+margin-bottom:12px;
+box-shadow:var(--shadow);
+outline: none;
+text-align: center;
+}
+
+button{
+width:100%;
+padding:14px;
+font-size:18px;
+border-radius:14px;
+border:none;
+background:var(--button);
+color:white;
+margin-top:10px;
+cursor:pointer;
+transition:0.3s;
+box-shadow:var(--shadow);
+font-weight: bold;
+}
+
+button:hover{
+transform:translateY(-3px);
+filter: brightness(1.1);
+}
+
+.quiz-option{
+display: flex;
+align-items: center;
+background:var(--card);
+padding:15px;
+margin:10px 0;
+border-radius:14px;
+cursor:pointer;
+text-align: right;
+border: 1px solid rgba(255,255,255,0.1);
+transition: 0.2s;
+}
+
+.quiz-option input {
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+.quiz-option:hover{
+background: rgba(255,255,255,0.2);
+}
+
+.hidden{display:none;}
+
+.toggle{
+background:none;
+border:2px solid var(--text);
+color:var(--text);
+padding:8px;
+margin-bottom:12px;
+border-radius:10px;
+font-size:14px;
+cursor:pointer;
+width: auto;
+}
+</style>
+</head>
+<body>
+<audio id="tickSound" src="kakaist-timer-ticks-314055_first_10_seconds.mp3"></audio>
+
+<div class="container">
+    <button class="toggle" onclick="toggleDark()">🌙 تبديل الوضع</button>
+    <h1>🪜 سلم الرياضيات (ثامن)</h1>
+
+    <div id="home">
+        <p>أدخل رقم التحدي (1 - 100)</p>
+        <input type="number" id="levelInput" min="1" max="100" placeholder="مثلاً: 1">
+        <button onclick="startLevel()">ابدأ التحدي</button>
+    </div>
+
+    <div id="lessonPage" class="hidden">
+        <h2 id="lessonTitle"></h2>
+        <div id="quiz"></div>
+        <p id="timerText">⏳ الوقت: 10</p>
+        <button onclick="checkAnswer()">تحقق من الإجابة</button>
+    </div>
+</div>
+
+<script>
+// نفس مصفوفة الأسئلة الخاصة بك (تم اختصارها هنا للمساحة ولكن أبقها كاملة عندك)
+const questions = [
+    {q:"حل المتباينة: x + 5 > 12", options:["x > 7","x < 7","x > 17","x < 17"], answer:"x > 7"},
+    {q:"حل المتباينة: x - 3 ≤ 10", options:["x ≤ 13","x ≥ 13","x ≤ 7","x ≥ 7"], answer:"x ≤ 13"},
+    // ... ضع بقية الـ 100 سؤال هنا كما كانت في كودك الأصلي ...
     {q:"قيمة (x^a) × (x^b) هي:", options:["x^(a+b)","x^(ab)","x^(a-b)","ax+b"], answer:"x^(a+b)"}
 ];
 
-let currentLevel=0;
-let correctAnswer=0;
+// إضافة بقية الأسئلة التي كانت في كودك هنا ليعمل التطبيق بشكل كامل.
+
+let currentLevel = 0;
+let correctAnswer = 0;
 let timer;
 let timeLeft = 10;
+const sound = document.getElementById("tickSound"); // تعريف الصوت
 
 function toggleDark(){
     document.body.classList.toggle("dark");
@@ -257,8 +401,9 @@ function startTimer(){
     
     document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
     
+    // تشغيل الصوت مع معالجة خطأ "التفاعل الأول"
     sound.currentTime = 0;
-    sound.play().catch(e => console.log("الصوت يحتاج لتفاعل"));
+    sound.play().catch(e => console.log("الصوت يحتاج لتفاعل لبدء التشغيل"));
 
     timer = setInterval(()=>{
         timeLeft--;
@@ -270,34 +415,37 @@ function startTimer(){
             alert("⛔ انتهى الوقت! حاول مجدداً");
             goBackHome();
         }
-    },1000);
+    }, 1000);
 }
 
 function startLevel(){
-    let level=Number(document.getElementById("levelInput").value);
+    let inputVal = document.getElementById("levelInput").value;
+    let level = Number(inputVal);
+    
     if(level < 1 || level > questions.length){
-        alert("الرجاء إدخال رقم بين 1 و 100");
+        alert("الرجاء إدخال رقم بين 1 و " + questions.length);
         return;
     }
-    currentLevel=level;
+    
+    currentLevel = level;
     document.getElementById("home").classList.add("hidden");
     document.getElementById("lessonPage").classList.remove("hidden");
     loadLesson(level);
 }
 
 function loadLesson(level){
-    document.getElementById("lessonTitle").innerText="التحدي رقم "+level;
+    document.getElementById("lessonTitle").innerText = "التحدي رقم " + level;
     const qObj = questions[level-1];
     correctAnswer = qObj.answer;
 
-    const quiz=document.getElementById("quiz");
-    quiz.innerHTML=`<p style="font-size:22px; margin:20px 0; font-weight:bold;">${qObj.q}</p>`;
+    const quiz = document.getElementById("quiz");
+    quiz.innerHTML = `<p style="font-size:22px; margin:20px 0; font-weight:bold;">${qObj.q}</p>`;
 
-    qObj.options.forEach(opt=>{
-        quiz.innerHTML+=`
+    qObj.options.forEach(opt => {
+        quiz.innerHTML += `
         <label class="quiz-option">
             <input type="radio" name="answer" value="${opt}">
-            ${opt}
+            <span>${opt}</span>
         </label>`;
     });
 
@@ -305,8 +453,7 @@ function loadLesson(level){
 }
 
 function checkAnswer(){
-    const selected=document.querySelector('input[name="answer"]:checked');
-    const sound = document.getElementById("tickSound");
+    const selected = document.querySelector('input[name="answer"]:checked');
 
     if(!selected){
         alert("اختر إجابة أولاً!");
@@ -318,16 +465,15 @@ function checkAnswer(){
 
     if(selected.value == correctAnswer.toString()){
         alert("✅ بطل! إجابة صحيحة.");
-        // الانتقال التلقائي للمستوى التالي إذا أراد المستخدم
         let next = currentLevel + 1;
-        if(next <= 100) {
+        if(next <= questions.length) {
             document.getElementById("levelInput").value = next;
             startLevel();
         } else {
             alert("تهانينا! ختمت الـ 100 سؤال!");
             goBackHome();
         }
-    }else{
+    } else {
         alert("❌ خطأ! الإجابة الصحيحة هي: " + correctAnswer);
         goBackHome();
     }
@@ -335,12 +481,11 @@ function checkAnswer(){
 
 function goBackHome(){
     clearInterval(timer);
-    document.getElementById("tickSound").pause();
+    sound.pause();
     document.getElementById("lessonPage").classList.add("hidden");
     document.getElementById("home").classList.remove("hidden");
-    document.getElementById("levelInput").value="";
+    document.getElementById("levelInput").value = "";
 }
 </script>
-
 </body>
 </html>
