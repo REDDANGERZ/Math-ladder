@@ -101,7 +101,7 @@ color:black;
 </style>
 </head>
 <body>
-
+<audio id="tickSound" src="kakaist-timer-ticks-314055_first_10_seconds.mp3"></audio>
 <div class="container">
 
 <button class="toggle" onclick="toggleDark()">🌙 تبديل الوضع</button>
@@ -256,20 +256,30 @@ function toggleDark(){
 }
 
 function startTimer(){
-    clearInterval(timer);
-    timeLeft = 10;
-    document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
 
-    timer = setInterval(()=>{
-        timeLeft--;
-        document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+clearInterval(timer);
 
-        if(timeLeft <= 0){
-            clearInterval(timer);
-            alert("⛔ انتهى الوقت! حاول مرة أخرى");
-            goBackHome();
-        }
-    }, 1000);
+timeLeft = 7;
+document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+
+const sound = document.getElementById("tickSound");
+
+timer = setInterval(()=>{
+
+timeLeft--;
+document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+
+/* 🔊 تشغيل الصوت كل ثانية */
+sound.currentTime = 0;
+sound.play();
+
+if(timeLeft <= 0){
+clearInterval(timer);
+alert("⛔ انتهى الوقت! خسرت");
+goHome();
+}
+
+},1000);
 }
 
 function startLevel(){
