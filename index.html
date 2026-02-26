@@ -256,30 +256,29 @@ function toggleDark(){
 }
 
 function startTimer(){
+    clearInterval(timer);
+    timeLeft = 10; // أعدتها لـ 10 ثواني لتتطابق مع ملفك الصوتي
+    document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
 
-clearInterval(timer);
+    const sound = document.getElementById("tickSound");
 
-timeLeft = 7;
-document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
+    timer = setInterval(()=>{
+        timeLeft--;
+        document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
 
-const sound = document.getElementById("tickSound");
+        // تشغيل صوت التيك في كل ثانية
+        if (sound) {
+            sound.pause();        // إيقاف الصوت الحالي
+            sound.currentTime = 0; // العودة للبداية
+            sound.play().catch(e => console.log("Audio play deferred")); // تشغيل مع تلافي أخطاء المتصفح
+        }
 
-timer = setInterval(()=>{
-
-timeLeft--;
-document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
-
-/* 🔊 تشغيل الصوت كل ثانية */
-sound.currentTime = 0;
-sound.play();
-
-if(timeLeft <= 0){
-clearInterval(timer);
-alert("⛔ انتهى الوقت! خسرت");
-goHome();
-}
-
-},1000);
+        if(timeLeft <= 0){
+            clearInterval(timer);
+            alert("⛔ انتهى الوقت! خسرت");
+            goBackHome(); // تصحيح اسم الدالة لتعود للرئيسية
+        }
+    }, 1000);
 }
 
 function startLevel(){
@@ -295,7 +294,6 @@ function startLevel(){
 }
 
 function loadLesson(level){
-    startTimer();
     document.getElementById("lessonTitle").innerText="المستوى "+level;
 
     const qObj = questions[level-1];
@@ -311,6 +309,9 @@ function loadLesson(level){
             ${opt}
         </label>`;
     });
+    
+    // تشغيل التوقيت بعد تحميل السؤال
+    startTimer();
 }
 
 function checkAnswer(){
@@ -322,7 +323,7 @@ function checkAnswer(){
 
     clearInterval(timer);
     if(selected.value == correctAnswer.toString()){
-        alert("✅ إجابة رائعة! لقد اجتزت المستوى " );
+        alert("✅ إجابة رائعة!");
     }else{
         alert("❌ خطأ! الإجابة الصحيحة كانت: " );
     }
@@ -330,6 +331,7 @@ function checkAnswer(){
 }
 
 function goBackHome(){
+    clearInterval(timer); // إيقاف التوقيت عند العودة
     document.getElementById("lessonPage").classList.add("hidden");
     document.getElementById("home").classList.remove("hidden");
     document.getElementById("levelInput").value="";
