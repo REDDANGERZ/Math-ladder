@@ -254,7 +254,7 @@ function toggleDark(){
 function startTimer(){
     clearInterval(timer);
     timeLeft = 10;
-    const sound = document.getElementById("tickSound");
+    
     document.getElementById("timerText").innerText = "⏳ الوقت: " + timeLeft;
     
     sound.currentTime = 0;
